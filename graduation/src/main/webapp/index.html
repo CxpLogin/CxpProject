@@ -45,8 +45,8 @@
 		};
 		myChart.showLoading(); //loading动画
 		
-		 var names=[];    //类别数组（实际用来盛放X轴坐标值）
-		
+		var names = new Array("d_smoke","d_infrared","d_temperature");    //类别数组（实际用来盛放X轴坐标值）
+		var values = [];
 	   	$.ajax({
 	   		async : true,
 	        type : "post",
@@ -56,15 +56,26 @@
 	        success:function(result) {
 	            if(result)
 	            {
-	            	var json= JSON.stringify(result);
-	            	var obj = eval('(' + json + ')');
+	            	var json= JSON.stringify(result);//将服务器传递json对象转成json字符串
+	            	var obj = eval('(' + json + ')');//将json字符串转成json对象
+	            	
+	            	var list = obj.xAxisData;//将list对象提取出来
+	            	
+// 	            	alert(list[0].d_smoke);
+	            	
+// 	            	values[0] = list[0].d_dat;
+	            	values[0] = list[0].d_smoke;
+	            	values[1] = list[0].d_infrared;
+	            	values[2] = list[0].d_temperature;
+	            	alert(values[0]);
+	            	
 	            	myChart.hideLoading();
 	            	myChart.setOption({
 	                    xAxis:{  
-	                        data:obj.xAxisData
+	                        data:names
 	                    },
 		            	series: [{
-		    		        data: obj.yAxisData
+		    		        data: values
 		    		    }]
 	                });
 	            }             

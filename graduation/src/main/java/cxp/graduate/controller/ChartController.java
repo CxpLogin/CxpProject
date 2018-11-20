@@ -1,17 +1,22 @@
 package cxp.graduate.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
-import javafx.scene.chart.XYChart.Series;
+
+import cxp.graduate.pojo.Days;
+import cxp.graduate.service.DaysService;
+
 
 /**
  * 
@@ -23,28 +28,16 @@ import javafx.scene.chart.XYChart.Series;
 @RequestMapping("/user/chart")
 public class ChartController {
 	
+	@Autowired
+	private DaysService DaysService;
+	
 	@RequestMapping(value="/daysView",produces="text/html;charset=UTF-8")
     public @ResponseBody String daysView() {
-		List<String> xAxisData = new ArrayList<String>();
-		xAxisData.add("星期一");
-		xAxisData.add("星期二");
-		xAxisData.add("星期三");
-		xAxisData.add("星期四");
-		xAxisData.add("星期五");
-		xAxisData.add("星期六");
-		xAxisData.add("星期天");
-		List<String> yAxisData = new ArrayList<String>();
-		yAxisData.add("20");
-		yAxisData.add("22");
-		yAxisData.add("24");
-		yAxisData.add("26");
-		yAxisData.add("28");
-		yAxisData.add("30");
-		yAxisData.add("32");
-		//将x、y轴的东西转成json格式
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+		String date = df.format(new Date());
+		List<Days> list = DaysService.getDataByDay(date);
 		JSONObject jsob = new JSONObject(); 
-        jsob.put("xAxisData", xAxisData);
-        jsob.put("yAxisData", yAxisData);
+        jsob.put("xAxisData", list);
 		return jsob.toString();
     }
 }
