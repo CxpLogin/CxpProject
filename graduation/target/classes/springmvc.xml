@@ -5,7 +5,7 @@
 	<mvc:annotation-driven/>
 	
 	<!-- 搜索spring控件 -->
-    <context:component-scan base-package="com.cxp"/>
+    <context:component-scan base-package="cxp.graduate"/>
     
     <!-- 视图页面配置 -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">    
