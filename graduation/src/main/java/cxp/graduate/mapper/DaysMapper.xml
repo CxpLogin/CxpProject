@@ -3,7 +3,6 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cxp.graduate.mapper.DaysMapper"> 
-
 	<resultMap type="Days" id="daysMap">
    		<result property="t_dat" column="t_dat" />
    		<result property="d_smoke" column="d_smoke" />
