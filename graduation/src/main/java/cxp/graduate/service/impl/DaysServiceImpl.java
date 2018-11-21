@@ -25,7 +25,9 @@ public class DaysServiceImpl implements DaysService {
 	public boolean saveData(Days days) {
 		// TODO Auto-generated method stub
 		//获取保存的日期
+		System.out.println(days);
 		Days exitDays = daysMapper.selectDay(days.getD_dat());
+		System.out.println(exitDays);
 		//假如检索到以当前参数得到Days为空，则证明数据库不存在该记录
 		if(exitDays == null) {
 			//执行插入操作

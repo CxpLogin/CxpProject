@@ -16,7 +16,8 @@ import cxp.graduate.pojo.Days;
 
 
 public class CustomerJunit {
-public ApplicationContext applicationContext;
+	
+	public ApplicationContext applicationContext;
 	
 	@Before  
     public void before() {  

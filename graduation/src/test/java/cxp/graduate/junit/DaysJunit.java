@@ -72,7 +72,7 @@ public class DaysJunit {
 	/*使用json数据插入*/
 	@Test
 	public void demo3() {
-		String objectJson = "{\"d_dat\":\"2018-11-24\",\"d_smoke\":25.23,\"d_infrared\":30.33,\"d_temperature\":16.22}";
+		String objectJson = "{\"d_dat\":\"2018-11-26\",\"d_smoke\":25.23,\"d_infrared\":30.33,\"d_temperature\":16.22}";
 		JSONObject jsonObject = JSONObject.fromObject(objectJson);
 		Days days = (Days) JSONObject.toBean(jsonObject,Days.class);
 		System.out.println(days.getD_dat());
@@ -81,6 +81,8 @@ public class DaysJunit {
 		System.out.println(days.getD_infrared());
 		if(daysService.saveData(days)) {
 			System.out.println("插入成功");
+		}else {
+			System.out.println("插入失败");
 		}
 	}
 }
