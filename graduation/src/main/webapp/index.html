@@ -59,14 +59,13 @@
 	            	var json= JSON.stringify(result);//将服务器传递json对象转成json字符串
 	            	var obj = eval('(' + json + ')');//将json字符串转成json对象
 	            	
-	            	var list = obj.xAxisData;//将list对象提取出来
+// 	            	alert(obj[0].d_dat);
 	            	
-// 	            	alert(list[0].d_smoke);
 	            	
-// 	            	values[0] = list[0].d_dat;
-	            	values[0] = list[0].d_smoke;
-	            	values[1] = list[0].d_infrared;
-	            	values[2] = list[0].d_temperature;
+// 	            	values[0] = obj[0].d_dat;
+	            	values[0] = obj[0].d_smoke;
+	            	values[1] = obj[0].d_infrared;
+	            	values[2] = obj[0].d_temperature;
 	            	alert(values[0]);
 	            	
 	            	myChart.hideLoading();

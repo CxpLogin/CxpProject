@@ -14,6 +14,12 @@ import cxp.graduate.pojo.Days;
  */
 
 public interface DaysMapper {
-	/*获取某一天的三个模块的数据*/
-	public List<Days> getDataByDay(String string);
+	/*获取某一天的三个模块的数据封装成list*/
+	public List<Days> getDataByDay(String d_dat);
+	
+	/*返回Days对象*/
+	public Days selectDay(String d_dat);
+	
+	/*保存数据*/
+	public void saveData(Days days);
 }

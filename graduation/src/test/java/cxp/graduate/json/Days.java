@@ -1,7 +1,8 @@
-package cxp.graduate.pojo;
+package cxp.graduate.json;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
+
 
 public class Days implements Serializable{
 
@@ -11,6 +12,7 @@ public class Days implements Serializable{
 	private float d_smoke;
 	private float d_temperature;
 	private float d_infrared;
+	
 	public String getD_dat() {
 		return d_dat;
 	}
@@ -40,4 +42,6 @@ public class Days implements Serializable{
 		return "Days [d_dat=" + d_dat + ", d_smoke=" + d_smoke + ", d_temperature=" + d_temperature + ", d_infrared="
 				+ d_infrared + "]";
 	}
+	
+
 }
