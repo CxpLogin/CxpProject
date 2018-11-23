@@ -12,7 +12,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import cxp.graduate.mapper.DaysMapper;
+import cxp.graduate.net.SocketUtils;
 import cxp.graduate.pojo.Days;
+import cxp.graduate.service.DaysService;
 
 
 public class CustomerJunit {
@@ -36,5 +38,17 @@ public class CustomerJunit {
 			Days days2 = (Days) iterator.next();
 			System.out.println(days2);
 		}
+	}
+	
+	@Test
+	public void fun() {
+		DaysService ds = SocketUtils.getBeanByName("daysService");
+		Days days = new Days();
+		String date = "2018-11-27";
+		days.setD_dat(date);
+		days.setD_smoke(25.23f);
+		days.setD_temperature(16.22f);
+		days.setD_infrared(30.33f);
+		ds.saveData(days);
 	}
 }

@@ -9,7 +9,7 @@ import cxp.graduate.mapper.DaysMapper;
 import cxp.graduate.pojo.Days;
 import cxp.graduate.service.DaysService;
 
-@Service
+@Service("daysService")
 public class DaysServiceImpl implements DaysService {
 	
 	@Autowired

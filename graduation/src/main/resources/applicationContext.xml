@@ -3,6 +3,9 @@
 	
 	<context:annotation-config />
 	
+	 <!-- 注册Spring工具类 -->
+    <bean id="springContextUtil" class="cxp.graduate.net.SocketUtils"></bean>
+	
 	<!-- 引入applicationContext-mapper.xml -->
 	<import resource="classpath*:applicationContext-mapper.xml"/>
 	

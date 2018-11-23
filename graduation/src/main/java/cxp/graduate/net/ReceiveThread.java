@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 
 import cxp.graduate.pojo.Days;
+import cxp.graduate.service.DaysService;
 import net.sf.json.JSONObject;
 
 /**
@@ -39,6 +40,8 @@ public class ReceiveThread implements Runnable{
 					JSONObject jsonObject = JSONObject.fromObject(jsonMsg);
 					Days days = (Days) JSONObject.toBean(jsonObject,Days.class);
 					System.out.println(days);
+					DaysService ds = SocketUtils.getBeanByName("daysService");
+					ds.saveData(days);
 				}else {
 					flag.setFlag(false); 
 				}	
