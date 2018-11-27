@@ -12,10 +12,17 @@ public class User implements Serializable{
 	
 	private static final long serialVersionUID = 898474463888824242L;
 	
+	private int userId;
 	private String userName;
 	private String userPwd;
-
-	
+	private String userEmail;
+	private boolean isEmailActive;
+	public int getUserId() {
+		return userId;
+	}
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
 	public String getUserName() {
 		return userName;
 	}
@@ -28,8 +35,22 @@ public class User implements Serializable{
 	public void setUserPwd(String userPwd) {
 		this.userPwd = userPwd;
 	}
+	public String getUserEmail() {
+		return userEmail;
+	}
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
+	}
+	public boolean isEmailActive() {
+		return isEmailActive;
+	}
+	public void setEmailActive(boolean isEmailActive) {
+		this.isEmailActive = isEmailActive;
+	}
 	@Override
 	public String toString() {
-		return "User [userName=" + userName + ", userPwd=" + userPwd + "]";
+		return "User [userId=" + userId + ", userName=" + userName + ", userPwd=" + userPwd + ", userEmail=" + userEmail
+				+ ", isEmailActive=" + isEmailActive + "]";
 	}
+	
 }
