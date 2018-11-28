@@ -60,8 +60,6 @@ public class UserController {
 			
 			//2、判断验证码是否输入正确
 	        String random = (String) session.getAttribute("RANDOMVALIDATECODEKEY");
-	        System.out.println(random);
-	        System.out.println(formInfo.getCode());
 	        if(!(formInfo.getCode().equals(random))) {
 	        	result.setKey("error");
 	    		result.setMessage("验证码输入错误");
