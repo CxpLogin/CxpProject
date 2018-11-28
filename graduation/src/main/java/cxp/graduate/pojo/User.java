@@ -1,6 +1,7 @@
 package cxp.graduate.pojo;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 
@@ -15,8 +16,11 @@ public class User implements Serializable{
 	private int userId;
 	private String userName;
 	private String userPwd;
-	private String userEmail;
-	private boolean isEmailActive;
+	
+	//一个用户具有多个设备，但一个设备仅有一个用户（一对多配置）
+	private List<Device> devices;
+	//利用另一张表来记录注册信息
+	private Email email;
 	public int getUserId() {
 		return userId;
 	}
@@ -35,22 +39,21 @@ public class User implements Serializable{
 	public void setUserPwd(String userPwd) {
 		this.userPwd = userPwd;
 	}
-	public String getUserEmail() {
-		return userEmail;
+	public List<Device> getDevices() {
+		return devices;
 	}
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
+	public void setDevices(List<Device> devices) {
+		this.devices = devices;
 	}
-	public boolean isEmailActive() {
-		return isEmailActive;
+	public Email getEmail() {
+		return email;
 	}
-	public void setEmailActive(boolean isEmailActive) {
-		this.isEmailActive = isEmailActive;
+	public void setEmail(Email email) {
+		this.email = email;
 	}
 	@Override
 	public String toString() {
-		return "User [userId=" + userId + ", userName=" + userName + ", userPwd=" + userPwd + ", userEmail=" + userEmail
-				+ ", isEmailActive=" + isEmailActive + "]";
+		return "User [userId=" + userId + ", userName=" + userName + ", userPwd=" + userPwd + ", devices=" + devices
+				+ ", email=" + email + "]";
 	}
-	
 }

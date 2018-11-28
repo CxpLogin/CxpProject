@@ -10,4 +10,18 @@ public interface UserService {
 	 * @return user
 	 */
 	public User findUser(User user);
+	
+	/**
+	 * 根据名字查询返回user
+	 * @param name
+	 * @return user
+	 */
+	public User findUserByName(String name);
+	
+	/**
+	 * 返回自增主键的id
+	 * @param user
+	 * @return
+	 */
+	public int getUserId(User user);
 }

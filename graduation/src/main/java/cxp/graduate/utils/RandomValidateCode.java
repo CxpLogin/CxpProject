@@ -63,6 +63,7 @@ public class RandomValidateCode {
         for (int i = 1; i <= stringNum; i++) {
             randomString = drowString(g, randomString, i);
         }
+        System.out.println(randomString);
         //将生成的随机字符串保存到session中，而jsp界面通过session.getAttribute("RANDOMCODEKEY")，
         //获得生成的验证码，然后跟用户输入的进行比较
         session.removeAttribute(RANDOMCODEKEY);

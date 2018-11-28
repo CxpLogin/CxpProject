@@ -24,15 +24,7 @@
 		<!-- 登录表单 -->
 		<script type="text/javascript">
 			$(document).ready(function () {
-				//首次获取验证码
-				$("#imgVerify").attr("src","/graduation/user/getVerify?"+Math.random());
-				
-				//获取验证码
-			    function getVerify(){
-			        var sr=document.getElementById('imgVerify')
-			        sr.src = "/graduation/user/getVerify?"+Math.random();
-			    }
-				$("#btn").click(function () {
+				$("#lg_btn").click(function () {
 					var params = $("#loginForm").serializeArray();
 					var values = {};
 					for( x in params ){
@@ -48,7 +40,7 @@
 			            	var json= JSON.stringify(result);//将服务器传递json对象转成json字符串
 			            	var obj = eval('(' + json + ')');//将json字符串转成json对象
 		                   	if(obj.key == "error"){
-		                   		alert(obj.message);
+		                   	 	alert(obj.message);
 		                   	}else{
 		                   		if(obj.key == "success"){
 		                   			window.location.href="/graduation/user/index.jsp";//需要跳转的地址
@@ -60,6 +52,45 @@
 			            }
 			        });
 				})
+				
+				$("#rg_btn").click(function () {
+					var params = $("#registForm").serializeArray();
+					var values = {};
+					for( x in params ){
+						values[params[x].name] = params[x].value;
+					}
+					var idata = JSON.stringify(values);
+					alert(idata);
+					$.ajax({
+			        	type: "POST",//方法类型
+			        	async:false,
+			            url: "/graduation/user/regist" ,//url
+			            contentType:"application/json;charset=utf-8",
+			            data: idata,
+			            success: function (result) {
+			            	var json= JSON.stringify(result);//将服务器传递json对象转成json字符串
+			            	var obj = eval('(' + json + ')');//将json字符串转成json对象
+		                   	if(obj.key == "error"){
+		                   		alert(obj.message);
+		                   	}else{
+		                   		if(obj.key == "success"){
+		                   			window.location.href="/graduation/user/index.jsp";//需要跳转的地址
+		                   		}
+		                   	}
+			            },
+			            error : function(result) {
+			            	alert(JSON.stringify(result));
+			            }
+			        });
+				})
+				//首次获取验证码
+// 				$("#imgVerify").attr("src","/graduation/user/getVerify?"+Math.random());
+				
+				//获取验证码
+// 			    function getVerify(){
+// 			        var sr=document.getElementById('imgVerify')
+// 			        sr.src = "/graduation/user/getVerify?"+Math.random();
+// 			    }
 			})
 		</script>
 	</head>
@@ -76,16 +107,16 @@
     		<div class="layui-tab-item layui-show">
     			<div style="text-align: center;">
     				<form class="form layui-form" action="" id="loginForm" method="post">
-    					 <div class="row layui-form-item">
+    					<div class="row layui-form-item">
 			                <label class="layui-form-label"><i class="layui-icon layui-icon-username" style="font-size: 30px; color: #1E9FFF;"></i></label>
 			                <div class="layui-input-block">
-			                    <input type="text" name="baseName" lay-verify="username" placeholder="用户名称" autocomplete="off" class="layui-input">
+			                    <input type="text" name="loginName" lay-verify="username" placeholder="用户名称" autocomplete="off" class="layui-input">
 			                </div>
 			            </div>
 			            <div class="row  layui-form-item">
 			                <label class="layui-form-label"><i class="layui-icon layui-icon-password" style="font-size: 30px; color: #1E9FFF;"></i></label>
 			                <div class="layui-input-block">
-			                    <input type="password" name="basePwd" lay-verify="pass" placeholder="用户密码" autocomplete="off" class="layui-input">
+			                    <input type="password" name="loginPwd" lay-verify="pass" placeholder="用户密码" autocomplete="off" class="layui-input">
 			                </div>
 			            </div>
 			            <div class="row  layui-form-item">
@@ -100,7 +131,14 @@
 			            </div>
 			            <div>
 				            <div class="row  layui-form-item">
-				                <img id="imgVerify" src="" alt="点击更换验证码" /><a href="" rel="nofollow">看不清，换一张</a>
+				                <img id="imgVerify" src="/graduation/user/getVerify" nclick="/graduation/user/getVerify?'+new Date().getTime()" alt="点击更换验证码" /><a href="">看不清，换一张</a>
+				           		<script type="text/javascript">
+								    function change(){
+										// 重新加载验证码图片 
+										// 方法二：如果图片缓存
+										document.getElementById("imgVerify").src = '/graduation/user/getVerify?' + new Date().getTime();
+									}
+								</script>
 				            </div>
 			            	<div class="row  layui-form-item">
 				                <label class="layui-form-label"><i class="layui-icon layui-icon-vercode" style="font-size: 30px; color: #1E9FFF;"></i></label>
@@ -123,41 +161,34 @@
 			                </div>
 			            </div>
 			            <div class=" layui-btn-group">
-			                <button class="layui-btn layui-btn-radius layui-btn-normal" id="btn">登录</button>
+			                <button class="layui-btn layui-btn-radius layui-btn-normal" id="lg_btn">登录</button>
 			            </div>
     				</form>
     			</div>
     		</div>
     		<div class="layui-tab-item">
     			<div style="text-align: center;">
-    				<form class="form layui-form" action="./user/login" method="post">
+    				<form class="form layui-form" action="" id="registForm" method="post">
     					 <div class="row layui-form-item">
 			                <label class="layui-form-label"><i class="layui-icon layui-icon-username" style="font-size: 30px; color: #1E9FFF;"></i></label>
 			                <div class="layui-input-block">
-			                    <input type="text" name="userName" lay-verify="username" placeholder="用户名称" autocomplete="off" class="layui-input">
+			                    <input type="text" name="registName" lay-verify="username" placeholder="用户名称" autocomplete="off" class="layui-input">
 			                </div>
 			            </div>
 			            <div class="row  layui-form-item">
 			                <label class="layui-form-label"><i class="layui-icon layui-icon-password" style="font-size: 30px; color: #1E9FFF;"></i></label>
 			                <div class="layui-input-block">
-			                    <input type="password" name="userPwd" lay-verify="pass" placeholder="用户密码" autocomplete="off" class="layui-input">
+			                    <input type="password" name="registPwd" lay-verify="pass" placeholder="用户密码" autocomplete="off" class="layui-input">
 			                </div>
 			            </div>
 			            <div class="row  layui-form-item">
 			                <label class="layui-form-label"><i class="layui-icon layui-icon-release" style="font-size: 30px; color: #1E9FFF;"></i></label>
 			                <div class="layui-input-block">
-			                    <input type="text" name="userEmail" lay-verify="pass" placeholder="用户邮箱" autocomplete="off" class="layui-input">
+			                    <input type="text" name="registEmail" lay-verify="required|email" placeholder="用户邮箱" autocomplete="off" class="layui-input">
 			                </div>
-			            </div>
-			            <div class="row  layui-form-item">
-			                <label class="layui-form-label"><i class="layui-icon layui-icon-vercode" style="font-size: 30px; color: #1E9FFF;"></i></label>
-			                <div class="layui-input-block">
-			                    <input type="text" name="userEmailCheck" lay-verify="pass" placeholder="请输入收到的验证码" autocomplete="off" class="layui-input">
-			                </div>
-			            </div>
-			            
+			            </div>			            
 			            <div class=" layui-btn-group">
-			                <button class="layui-btn layui-btn-radius layui-btn-normal">注册</button>
+			                <button class="layui-btn layui-btn-radius layui-btn-normal" id="rg_btn">注册</button>
 			            </div>
     				</form>
     			</div>
@@ -165,26 +196,6 @@
   		</div>
 		</div> 
   	</div> 
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <script src="layui/layui.js" charset="utf-8"></script>
 <script>
@@ -221,6 +232,7 @@
 		  	] 
 		});
 	});
+
 </script>
 </body>
 </html>

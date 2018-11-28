@@ -7,28 +7,22 @@ package cxp.graduate.pojo;
  * @date:   2018年11月27日 上午11:18:42
  */
 public class LoginFormBean {
-	private String baseName;
-	private String basePwd;
+	private String loginName;
+	private String loginPwd;
 	private String type;
 	private String code;
 	private boolean isRemeber;
-	public String getCode() {
-		return code;
+	public String getLoginName() {
+		return loginName;
 	}
-	public void setCode(String code) {
-		this.code = code;
+	public void setLoginName(String loginName) {
+		this.loginName = loginName;
 	}
-	public String getBaseName() {
-		return baseName;
+	public String getLoginPwd() {
+		return loginPwd;
 	}
-	public void setBaseName(String baseName) {
-		this.baseName = baseName;
-	}
-	public String getBasePwd() {
-		return basePwd;
-	}
-	public void setBasePwd(String basePwd) {
-		this.basePwd = basePwd;
+	public void setLoginPwd(String loginPwd) {
+		this.loginPwd = loginPwd;
 	}
 	public String getType() {
 		return type;
@@ -36,12 +30,17 @@ public class LoginFormBean {
 	public void setType(String type) {
 		this.type = type;
 	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
 	public boolean isRemeber() {
 		return isRemeber;
 	}
 	public void setRemeber(boolean isRemeber) {
 		this.isRemeber = isRemeber;
 	}
-	 
 	
 }
