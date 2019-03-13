@@ -15,11 +15,17 @@ public class CodeFactory {
 	
 	@Test
 	public void demo() {
-		String code = getCode();
-		String str = encrypt(code);
-		System.out.println(code);
-		System.out.println(str);
-		System.out.println(authenticatePassword(str,code));
+//		String code = getCode();
+//		String code = "123456";
+//		String str = encrypt(code);
+//		System.out.println(code);
+//		System.out.println(str);
+//		System.out.println(authenticatePassword(str,code));
+		//获取20个唯一编码
+		for(int i = 0;i < 20;i++) {
+			String code = getCode();
+			System.out.println(code);
+		}
 	}
 	
     private int codeCount = 6;//验证码个数

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>普通用户登录界面</title>
+		<!--layui Start-->
+		<link rel="stylesheet" href="../../layui/css/layui.css">
+		<link rel="stylesheet" href="../../css/form.css" />
+		<!-- layui End-->	
+		<script type="text/javascript" src="../../js/jquery-3.3.1.js" ></script>
+		
+		<!-- 检测用户是否登录 -->
+		<script type="text/javascript">
+			$(document).ready(function () {	
+				$.ajax({
+		        	type: "POST",//方法类型
+		        	async:false,
+		            url: "/graduation/user/check" ,//url
+		            contentType:"application/json;charset=utf-8",
+		            success: function (result) {
+		            	var json= JSON.stringify(result);//将服务器传递json对象转成json字符串
+		            	var obj = eval('(' + json + ')');//将json字符串转成json对象
+	                   	if(obj.key == "success"){
+	                   		if(obj.message == "已登录"){
+	                   			window.location.href='/graduation/user-welcome.html';//需要跳转的地址
+                   			}	
+	                   	}	            	
+		            },
+		            error : function(result) {
+		            	alert("其他问题");
+		            }
+		        });	
+			});
+		</script>
+	
+		<!-- 登录表单 -->
+		<script type="text/javascript">
+			$(document).ready(function () {	
+				$("#lg_btn").click(function () {
+					var params = $("#loginForm").serializeArray();
+					var values = {};
+					for( x in params ){
+						values[params[x].name] = params[x].value;
+					}
+					var idata = JSON.stringify(values);
+					$.ajax({
+			        	type: "POST",//方法类型
+			        	async:false,
+			            url: "/graduation/user/login" ,//url
+			            contentType:"application/json;charset=utf-8",
+			            data: idata,
+			            success: function (result) {
+			            	var json= JSON.stringify(result);//将服务器传递json对象转成json字符串
+			            	var obj = eval('(' + json + ')');//将json字符串转成json对象			    
+		                   	if(obj.key == "success"){
+		                   		if(obj.message == "用户名或密码输入正确"){
+		                   			alert(obj.message);
+		                   			window.location.href='/graduation/user-welcome.html';//需要跳转的地址
+		                   		}
+		                   		if(obj.message == "验证码错误"){
+		                   			alert(obj.message);
+		                   			var sr=document.getElementById('imgVerify')
+	                		        sr.src = "/graduation/user/getVerify?" + Math.random();
+		                   		}
+		                   		if(obj.message == "用户名或密码输入不正确"){
+		                   			alert(obj.message);
+		                   			window.location.reload();
+		                   		}
+		                   		if(obj.message == "设备未激活"){
+		                   			alert(obj.message);
+		                   			window.location.href="/graduation/html/user/email-activate.html";//邮箱激活网址
+		                   		}
+		                   		
+		                   	}
+			            },
+			            error : function(result) {
+			            	alert("其他问题");
+			            }
+			        });
+			  		return false;
+				})			
+			});
+		</script>
+	
+		<!-- 验证码测试 -->
+		<script type="text/javascript">
+			$(document).ready(function () {
+				//首次获取验证码
+				$("#imgVerify").attr("src","/graduation/user/getVerify?" + Math.random());
+	
+				//获取验证码
+			    function getVerify(){
+			        var sr=document.getElementById('imgVerify')
+			        sr.src = "/graduation/user/getVerify?" + Math.random();
+			    }
+			});
+		</script>
+		<script type="application/javascript">
+			function changeVerify(){
+				var sr=document.getElementById('imgVerify')
+				sr.src = "/graduation/user/getVerify?" + Math.random();
+			}
+		</script>
+		
+		<!--注册按钮-->
+		<script type="text/javascript">
+			$(document).ready(function () {
+				$('#rg_btn').click(function(){
+					location.href = "user-regist.html"
+				})
+			});
+		</script>
+		
+		<!-- 用户名称校验 -->
+		<script type="text/javascript">
+			$(document).ready(function(){
+			  $("#inputName").blur(function(){
+			  		var text = $("#inputName").val();
+	                var pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？%]");
+	                var result = text.match(pattern);
+			    	if(result){
+			    		alert('包含特殊字符');
+			    	}
+			  });
+			});
+		</script>
+	</head>
+<body>
+	<script type="text/javascript" src="https://cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>
+	<div class="panel">
+		<div style="text-align: center;">
+			<form class="form layui-form" action="" id="loginForm" method="post">
+			<div class="row layui-form-item">
+	            <label class="layui-form-label"><i class="layui-icon layui-icon-username" style="font-size: 30px; color: #1E9FFF;"></i></label>
+	            <div class="layui-input-block">
+	                <input type="text" name="userName" placeholder="用户名称" class="layui-input" id="inputName">
+	            </div>
+	        </div>
+	        <div class="row  layui-form-item">
+	            <label class="layui-form-label"><i class="layui-icon layui-icon-password" style="font-size: 30px; color: #1E9FFF;"></i></label>
+	            <div class="layui-input-block">
+	                <input type="password" name="userPwd" placeholder="用户密码" class="layui-input">
+	            </div>
+	        </div>
+	        <div>
+	          	<div class="row  layui-form-item">
+			  		<img id="imgVerify" onclick="changeVerify()" src=""  alt="点击更换验证码" /><a onclick="changeVerify()" rel="nofollow">看不清，换一张</a>
+	          	</div>
+	         	<div class="row  layui-form-item">
+	              	<label class="layui-form-label"><i class="layui-icon layui-icon-vercode" style="font-size: 30px; color: #1E9FFF;"></i></label>
+	              	<div class="layui-input-block">
+	                <input type="text" name="code" placeholder="请输入图中验证码" class="layui-input">
+	              </div>
+	         	</div>
+	        </div>
+	        <div class="layui-form-item">
+	            <div style="text-align: right;">
+	                <div class="layui-input-inline">
+	                    <a href="###">
+	                        <i class="layui-icon layui-icon-help" style="color:white;background-color: black;border-radius: 50%;"></i> 忘记密码</a>
+	                </div>
+	            </div>
+	        </div>
+		</form>
+		<button class="layui-btn layui-btn-radius layui-btn-normal" id="lg_btn">登录</button>
+		<button class="layui-btn layui-btn-radius layui-btn-normal" id="rg_btn">注册</button>
+		</div>
+		
+	</div>
+	
+</body>
+<script src="../../layui/layui.js" charset="utf-8"></script>
+</html>

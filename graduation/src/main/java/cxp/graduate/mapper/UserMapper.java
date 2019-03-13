@@ -2,42 +2,60 @@ package cxp.graduate.mapper;
 
 import java.util.List;
 
+import cxp.graduate.pojo.Device;
 import cxp.graduate.pojo.User;
 
 public interface UserMapper {
 	
 	/**
-	 * 查询是否存在用户
-	 * @param user
-	 * @return user
+	 * 
+	* @Title: findUserByName
+	* @Description: 查询是否存在用户
+	* @param：
+	* @return：
+	* @throws：
 	 */
-	public User findUser(User user);
+	public User findUserByName(User user);
 	
 	/**
-	 * 根据用户名查询用户是否存在
-	 * @param name
-	 * @return User
+	 * 
+	* @Title: findUserEmailByName
+	* @Description: 根据邮箱查询，是否存在邮箱
+	* @param：
+	* @return：
+	* @throws：
 	 */
-	public User findUserByName(String name);
+	public String findUserEmail(String emailName);
 	
 	/**
-	 * 查询用户名下的设备
-	 * @param id
-	 * @return List<User>
+	 * 
+	* @Title: findUserByName
+	* @Description: 查询该用户下的设备信息
+	* @param：int userID
+	* @return：
+	* @throws：
 	 */
-	public List<User> selectUserDevice(int id);
+	public User findDeviceByID(int userID);
 	
 	/**
-	 * 查询用户注册信息
-	 * @param id
-	 * @return List<User>
+	 * 
+	* @Title: findUserByName
+	* @Description: 根据用户名查询用户是否存在
+	* @param：
+	* @return：
+	* @throws：
 	 */
-	public List<User> selectUserRegist(int id);
+	public User selectUserByName(String name);
 	
 	/**
-	 * 插入用户返回自增主键id
-	 * @param u
-	 * @return
+	 * 
+	* @Title: insertUser
+	* @Description: 返回用户自增组件
+	* @param：
+	* @return：
+	* @throws：
 	 */
-	public int insertUser(User u); 
+	public int insertUser(User u);
+	
+	
 }

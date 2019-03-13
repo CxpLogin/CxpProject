@@ -6,53 +6,45 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
    
    <!-- 根据用户名及密码查询用户 -->
    <resultMap type="User" id="userMap">
-   		<result property="userId" column="userId"/>
+   		<result property="userID" column="userID"/>
    		<result property="userName" column="userName"/>
    		<result property="userPwd"  column="userPwd"/>
    	 	<result property="userEmail" column="userEmail"/>
-   	 	<result property="isEmailActive" column="emailActive"/>
+   	 	<result property="registTime" column="registTime"/>
     </resultMap>
-   <select id="findUser" resultMap="userMap" parameterType="User">
+   <select id="findUserByName" resultMap="userMap" parameterType="User">
    	select * from user where userName=#{userName} and userPwd=#{userPwd}
    </select>
    
+   
    <!-- 根据用户名查询用户 -->
-   <select id="findUserByName" resultType="User" parameterType="String">
+   <select id="selectUserByName" resultType="User" parameterType="String">
    	select * from user where userName=#{userName}
    </select>
    
-   <!-- 查询用户名下有几个设备 -->
-   <resultMap type="User" id="deviceMap">
-		<result property="userId" column="userId"/>
-   		<result property="userName" column="userName"/>
-   		<result property="userPwd"  column="userPwd"/>
-		<collection property="devices" javaType="ArrayList" ofType="Device" column="uid_did">
-			<id property="deviceId" column="deviceId"/>    
-            <result property="deviceState" column="deviceState"/>
-		</collection>
-	</resultMap>
-   <select id="selectUserDevice" resultMap="deviceMap" parameterType="int">
-   	select * from user u,device d where u.userId = d.uid_did and u.userId = #{userId};
+   <!-- 根据邮箱名查询是否存在该邮箱 -->
+   <resultMap type="String" id="existEmail">
+   	 	<result property="userEmail" column="userEmail"/>
+    </resultMap>
+   <select id="findUserEmail" resultMap="existEmail" parameterType="String">
+   	select * from user where userEmail=#{userEmail}
    </select>
    
-   <!-- 查询用户的注册信息 -->
-   <resultMap type="User" id="registMap">
-		<result property="userId" column="userId"/>
-   		<result property="userName" column="userName"/>
-   		<result property="userPwd"  column="userPwd"/>
-		<association property="email" javaType="Email">
-			<id property="id" column="id"/>    
-            <result property="email" column="email"/>
-            <result property="state" column="state"/>
-            <result property="date" column="registTime"/>
-		</association>
+   <!-- 查询用户设备是否激活 -->
+   <resultMap type="User" id="deviceMap">
+		<result property="userID" column="userID"/>
+		<collection property="devices" javaType="ArrayList" ofType="Device" column="uid_did">
+			<id property="deviceID" column="deviceID"/>    
+            <result property="activate" column="isActivate"/>
+		</collection>
 	</resultMap>
-   <select id="selectUserRegist" resultMap="registMap" parameterType="int">
-   	select * from user u,regist r where u.userId = r.uid_rid and u.userId = #{userId};
+   <select id="findDeviceByID" resultMap="deviceMap" parameterType="int">
+   	select * from user u,device d where u.userID = d.deviceID and u.userID = #{userID};
    </select>
    
    <!-- 插入用户返回自增主键id -->
-   <insert id="insertUser" useGeneratedKeys="true" keyColumn="userId" keyProperty="userId" parameterType="User">
-   		insert into user(userName,userPwd) value (#{userName},#{userPwd})
+   <insert id="insertUser" useGeneratedKeys="true" keyColumn="userID" keyProperty="userID" parameterType="User">
+   		insert into user(userName,userPwd,userEmail,registTime) value (#{userName},#{userPwd},#{userEmail},#{registTime});
 	</insert>
+   
 </mapper>

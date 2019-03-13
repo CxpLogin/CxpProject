@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>主页</title>
+		
+		<link rel="stylesheet" href="../../layui/css/layui.css" />
+		<script type="text/javascript" src="../../js/jquery-3.3.1.js" ></script>
+		<script type="text/javascript" src="../../js/echarts.js" ></script>
+		
+		<!-- 检测用户是否登录 -->
+		<script type="text/javascript">
+			$(document).ready(function () {	
+				$.ajax({
+		        	type: "POST",//方法类型
+		        	async:false,
+		            url: "/graduation/user/check" ,//url
+		            contentType:"application/json;charset=utf-8",
+		            success: function (result) {
+		            	var json= JSON.stringify(result);//将服务器传递json对象转成json字符串
+		            	var obj = eval('(' + json + ')');//将json字符串转成json对象
+	                   	if(obj.key == "success"){	                   		
+	                   		if(obj.message == "未登录"){
+	                   			window.location.href='/graduation/html/user/user-login.html';//需要跳转的地址
+                   			}	
+	                   	}	            	
+		            },
+		            error : function(result) {
+		            	alert("其他问题");
+		            }
+		        });	
+			});
+		</script>
+		
+		<script type="text/javascript">
+			var obj; 
+			var time=[],mq2=[],dht11=[],flame=[];
+	 		$(document).ready(function () {	
+				$.ajax({
+		        	type: "POST",//方法类型
+		        	async:false,
+		            url: "/graduation/user/sensor" ,//url
+		            contentType:"application/json;charset=utf-8",
+		            success: function (result) {
+		            	var json= JSON.stringify(result);//将服务器传递json对象转成json字符串
+		            	obj = eval('(' + json + ')');//将json字符串转成json对象		            	
+		            	var dat = obj[0].intime.split(" ")[0];
+		            	for(var i=0;i < obj.length;i++){
+		            		time[i] = obj[i].intime.split(" ")[1].substring(0,5);
+		            		mq2[i] = obj[i].mq2;
+		            		dht11[i] = obj[i].dht11;
+		            		flame[i] = obj[i].flame;
+		            	}	
+		            	
+		            	// 基于准备好的dom，初始化echarts实例
+						var MQ2 = echarts.init(document.getElementById('MQ2'));		
+				        // 指定图表的配置项和数据
+				        var option = {  
+			        		title: {
+			        	        text: dat
+			        	    },
+			        		tooltip: {
+			        	        trigger: 'axis'
+			        	    },			        	  
+				            xAxis: {
+				            	data: time,
+						        splitLine: {
+						            show: false
+						        }
+				            },
+				            yAxis: {					       
+						        boundaryGap: [0, '100%'],
+						        splitLine: {
+						            show: false
+						        }
+						    },
+				            series: [{
+				            	type: 'line',
+				            	showSymbol: false,
+						        hoverAnimation: false,
+						        data: mq2
+				            }]
+				        };
+				        MQ2.setOption(option);
+				        var DHT11 = echarts.init(document.getElementById('DHT11'));	
+				        var option = {
+				        		title: {
+				        	        text: dat
+				        	    },
+				        		tooltip: {
+				        	        trigger: 'axis'
+				        	    },
+					            xAxis: {
+					            	data: time,
+							        splitLine: {
+							            show: false
+							        }
+					            },
+					            yAxis: {					       
+							        boundaryGap: [0, '100%'],
+							        splitLine: {
+							            show: false
+							        }
+							    },
+					            series: [{
+					            	type: 'line',
+					            	showSymbol: false,
+							        hoverAnimation: false,
+							        data: dht11
+					            }]
+					        };
+				        DHT11.setOption(option);
+				        var Whole = echarts.init(document.getElementById('Whole'));	
+				        var option = {
+				        		title: {
+				        	        text: dat
+				        	    },
+				        	    tooltip : {
+				        	        trigger: 'axis',
+				        	        axisPointer: {
+				        	            type: 'cross',
+				        	            label: {
+				        	                backgroundColor: '#6a7985'
+				        	            }
+				        	        }
+				        	    },
+				        	    legend: {
+				        	        data:['烟雾传感器','温湿度传感器','火焰传感器']
+				        	    },
+				        	    toolbox: {
+				        	        feature: {
+				        	            saveAsImage: {}
+				        	        }
+				        	    },
+				        	    grid: {
+				        	        left: '3%',
+				        	        right: '4%',
+				        	        bottom: '3%',
+				        	        containLabel: true
+				        	    },
+				        	    xAxis : [
+				        	        {
+				        	            type : 'category',
+				        	            boundaryGap : false,
+				        	            data : time
+				        	        }
+				        	    ],
+				        	    yAxis : [
+				        	        {
+				        	            type : 'value'
+				        	        }
+				        	    ],
+					            series: [
+					            	{
+					                    name:'烟雾传感器',
+					                    type:'line',
+					                    stack: '总量',
+					                    areaStyle: {},
+					                    data: mq2
+					                },
+					                {
+					                    name:'温湿度传感器',
+					                    type:'line',
+					                    stack: '总量',
+					                    areaStyle: {},
+					                    data: dht11
+					                },
+					                {
+					                    name:'火焰传感器',
+					                    type:'line',
+					                    stack: '总量',
+					                    areaStyle: {},
+					                    label: {
+					                        normal: {
+					                            show: true,
+					                            position: 'top'
+					                        }
+					                    },
+					                    areaStyle: {normal: {}},
+					                    data: flame
+					                },
+					            ]
+					        };
+				        Whole.setOption(option);
+				        
+		            },
+		            error : function(result) {
+		            	alert("其他问题");
+		            }
+		        });
+		  		return false;			
+			});
+		</script>
+	</head>
+<body style="background-color: #01AAED;">
+	<script type="text/javascript" src="https://cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>　
+	<div class="layui-fluid">
+		<div class="layui-row layui-col-space15">
+			<div class="layui-col-md8">
+				<div class="layui-row layui-col-space15">
+					<!--烟雾传感器-->
+          			<div class="layui-col-md6">
+            			<div class="layui-card">
+            				<div class="layui-card-header"><font color="#23262E" size="5" face="微软雅黑">烟雾传感器</font></div>
+            				<div class="layui-card-body">
+            					<div class="layui-carousel layadmin-carousel layadmin-shortcut" lay-anim="" lay-indicator="inside" lay-arrow="none" style="width: 100%; height: 280px;">
+            						<div id="MQ2" style="width: 100%; height: 280px;">
+            						</div>
+            					</div>
+            				</div>
+            			</div>
+            		</div>
+            		<!-- 温湿度传感器 -->
+            		<div class="layui-col-md6">
+            			<div class="layui-card">
+            				<div class="layui-card-header"><font color="#23262E" size="5" face="微软雅黑">温湿度传感器</font></div>
+            				<div class="layui-card-body">
+            					<div class="layui-carousel layadmin-carousel layadmin-shortcut" lay-anim="" lay-indicator="inside" lay-arrow="none" style="width: 100%; height: 280px;">
+            						<div id="DHT11" style="width: 100%; height: 280px;">
+            						</div>
+            					</div>
+            				</div>
+            			</div>
+            		</div>
+            		<!-- 综合传感器 -->
+            		<div class="layui-col-md12">
+            			<div class="layui-card">
+            				<div class="layui-card-header"><font color="#23262E" size="5" face="微软雅黑">总传感器数据</font></div>
+            				<div class="layui-card-body">
+            					<div class="layui-carousel layadmin-carousel layadmin-shortcut" lay-anim="" lay-indicator="inside" lay-arrow="none" style="width: 100%; height: 280px;">
+            						<div id="Whole" style="width: 100%; height: 280px;"></div>
+            					</div>
+            				</div>
+            			</div>
+            		</div>	
+			</div>
+		</div>
+		<!--版本号-->
+		<div class="layui-col-md4">
+        	<div class="layui-card">
+          		<div class="layui-card-header"><font color="#23262E" size="5" face="微软雅黑">版本信息</font></div>
+         	 		<div class="layui-card-body layui-text">
+            			<table class="layui-table">
+              			<colgroup><col width="100"><col></colgroup>
+              			<tbody>
+			                <tr>
+			                  	<td>当前版本</td>
+			                  	<td>
+				                    <script type="text/html" template="">
+				                      	<a href="#" target="_blank" style="padding-left: 15px;">版本更新</a>
+				                    </script> sys.v1.0 <a href="http://fly.layui.com/docs/3/" target="_blank" style="padding-left: 15px;">更新日志</a> 
+			                  	</td>
+			                </tr>
+	                		<tr>
+			                  	<td>传感器类型</td>
+			                  	<td><script type="text/html" template=""></script> 红外/温湿度/烟雾</td>	
+			                </tr>
+			                <tr>
+			                  <td>主要特色</td>
+			                  <td>实时侦测/ 实时控制 / 准确有效 / 精准警报</td>
+			                </tr>
+              			</tbody>
+            			</table>
+          			</div>
+        	</div>
+
+        
+	        <div class="layui-card">
+	          	<div class="layui-card-header"><font color="#23262E" size="5" face="微软雅黑">温馨提示</font></div>
+		          	<div class="layui-card-body">
+		            	<div class="layui-carousel layadmin-carousel layadmin-news" data-autoplay="true" data-anim="fade" lay-filter="news" lay-anim="fade" lay-indicator="inside" lay-arrow="none" style="width: 100%; height: 280px;">
+		            	<p>1、火灾袭来时要迅速逃生，不要贪恋财物。</p>
+		            	<p>2、家庭成员平时就要了解掌握火灾逃生的基本方法，熟悉几条逃生路线。</p>
+		            	<p>3、受到火势威胁时，要当机立断披上浸湿的衣物、被褥等向安全出口方向冲出去。</p>
+		            	<p>4、穿过浓烟逃生时，要尽量使身体贴近地面，并用湿毛巾捂住口鼻。</p>
+		            	<p>5、身上着火，千万不要奔跑，可就地打滚或用厚重衣物压灭火苗。</p>
+		            	<p>6、遇火灾不可乘坐电梯，要向安全出口方向逃生。</p>
+		            	<p>7、室外着火，门已发烫时，千万不要开门，以防大火窜入室内。要用浸湿的被褥、衣物等堵塞门窗，并泼水降温。</p>
+		            	<p>8、若所有逃生线路被大火封锁，要立即退回室内，用打手电筒、挥舞衣物、呼叫等方式向窗外发送求救信号，等待救援。</p>
+		            	</div>
+		          	</div>
+	        	</div>
+      	</div>
+	</div>
+</body>
+</html>

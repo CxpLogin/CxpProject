@@ -9,10 +9,14 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
  
 /**
- * 验证码生成类
- * Created by zhm on 2017/9/30.
+ * 
+* @ClassName: RandomValidateCode
+* @Description: 验证码生成工厂
+* @author Cxp
+* @date 2019年3月7日
  */
 public class RandomValidateCode {
+	
     public static final String RANDOMCODEKEY= "RANDOMVALIDATECODEKEY";//放到session中的key
     private String randString = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";//随机产生数字与字母组合的字符串
     private int width = 100;// 图片宽

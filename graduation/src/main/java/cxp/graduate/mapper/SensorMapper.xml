@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cxp.graduate.mapper.SensorMapper">  
+   <!-- 根据设备id查询最近十条数据  -->
+   <!-- select count(*) from sensor where did_sid = 1; -->
+   <!-- select * from sensor where did_sid = 1; -->
+   <resultMap type="Sensor" id="sensorMap">
+   		<result property="intime" column="INTIME"/>
+   		<result property="mq2" column="MQ2"/>
+   		<result property="dht11"  column="DHT11"/>
+   	 	<result property="flame" column="FLAME"/>
+    </resultMap>
+   <select id="selectByDid" resultMap="sensorMap" parameterType="int">
+   		select * from sensor where did_sid = #{did_sid}
+   </select>
+   <select id="selectCount" resultType="int" parameterType="int">
+   		select count(*) from sensor where did_sid = #{did_sid};
+   </select>
+   
+   <!-- 插入一条数据的同时删除第一条数据 -->
+   <!-- select * from sensor where did_sid = 1 order by intime;按时间升序 -->
+   <!-- select * from sensor s where did_sid = 1 order by intime limit 0,1;取时间排序后的第一个数据 -->
+   <!-- delete from sensor where intime = (select tmp.intime from (select * from sensor where did_sid = 1 order by intime limit 0,1) as tmp); -->
+   <delete id="deleteFirstTime" parameterType="int">  
+        delete from sensor where intime = (select tmp.intime from (select * from sensor where did_sid = #{did_sid} order by intime limit 0,1) as tmp)
+   </delete>
+   <!-- 插入数据 -->
+   <insert id="insertTime" parameterType="Sensor">
+   		insert into sensor values (#{intime},#{mq2},#{dht11},#{flame},#{did_sid});
+   </insert>
+   
+   
+   
+	
+</mapper>

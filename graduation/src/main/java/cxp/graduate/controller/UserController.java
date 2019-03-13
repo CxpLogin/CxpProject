@@ -3,12 +3,10 @@ package cxp.graduate.controller;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,125 +14,63 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import cxp.graduate.pojo.Email;
-import cxp.graduate.pojo.LoginFormBean;
-import cxp.graduate.pojo.RegistFormBean;
 import cxp.graduate.pojo.User;
-import cxp.graduate.service.EmailService;
+import cxp.graduate.service.DeviceService;
 import cxp.graduate.service.UserService;
 import cxp.graduate.utils.CodeFactory;
 import cxp.graduate.utils.RandomValidateCode;
-import cxp.graduate.utils.RegisterValidate;
 import cxp.graduate.utils.UserResultUtils;
 import net.sf.json.JSONObject;
 
-/**
- * 
- * @ClassName:  UserController   
- * @Description:主要处理普通用户业务逻辑 
- * @date:   2018年11月23日 下午5:36:33
- */
 @Controller
 @RequestMapping("/user")
 public class UserController {
-	
-//	private static Logger logger = Logger.getLogger(UserController.class);
-	
+	/**
+	 * @ClassName：UserController
+	 * @Description: 用户登录、注册处理模块
+	 * @date: 2019-03-07 v1.1
+	 */
 	@Autowired
 	private UserService userService;
-	
 	@Autowired
-	private EmailService emailService;
+	private DeviceService deviceService;
 	
-	//用户登录
-	@RequestMapping(value="login",method=RequestMethod.POST,produces="application/json;charset=utf-8")
-	@ResponseBody
-	public String login(@RequestBody LoginFormBean formInfo,HttpSession session) {
-		UserResultUtils result = new UserResultUtils();
-		
-		//1、提前判断用户类型
-		if(formInfo.getType().equals("admin")) {
-			System.out.println("直接跳转到adminController");
-		}else {
-			System.out.println("用户为user");
-			
-			//2、判断验证码是否输入正确
-	        String random = (String) session.getAttribute("RANDOMVALIDATECODEKEY");
-	        if(!(formInfo.getCode().equals(random))) {
-	        	result.setKey("error");
-	    		result.setMessage("验证码输入错误");
-	    		JSONObject json = JSONObject.fromObject(result);
-	    		return json.toString();
-	        }else {
-	        	//3、查询用户、检测邮箱是否激活
-				User user = new User();
-				user.setUserName(formInfo.getLoginName());
-				user.setUserPwd(formInfo.getLoginPwd());
-				User findUser = userService.findUser(user);
-				if (findUser==null) {
-					result.setKey("error");
-					result.setMessage("用户名或密码不正确");
-					JSONObject json = JSONObject.fromObject(result);
-					return json.toString();
-				}
-			}
-		}	
-		result.setKey("success");
-		result.setMessage("登录成功");
-		JSONObject json = JSONObject.fromObject(result);
-		return json.toString();
-	}
+	UserResultUtils result = new UserResultUtils();
 	
-	//用户登录
-	@RequestMapping(value="regist",method=RequestMethod.POST,produces="application/json;charset=utf-8")
+	/**
+	 * 
+	* @Title: check
+	* @Description: 检测用户登录的情况，若登录了自动跳转到主页
+	* @param：
+	* @return：
+	* @throws：
+	 */
+	@RequestMapping(value="check",method=RequestMethod.POST,produces="application/json;charset=utf-8")
 	@ResponseBody
-	public String regist(@RequestBody RegistFormBean info) {
-		UserResultUtils result = new UserResultUtils();
-		//1、首先判断用户名是否被使用过
-		User exitUser = userService.findUserByName(info.getRegistName());
-		if( exitUser != null) {
-			result.setKey("error");
-			result.setMessage("用户名用户名已存在");
+	public String check(HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		//查看session域中没有user
+		if(user != null) {
+			result.setKey("success");
+			result.setMessage(result.LoginIn);
 			JSONObject json = JSONObject.fromObject(result);
 			return json.toString();
-		}else {
-			//2、判断邮箱是否存在
-			Email exitEmail = emailService.findEmailName(info.getRegistEmail());
-			if( exitEmail != null) {
-				result.setKey("error");
-				result.setMessage("邮箱已存在");
-				JSONObject json = JSONObject.fromObject(result);
-				return json.toString();
-			}
-			//3、邮箱不存在，优先插入邮箱
-			CodeFactory codeFactory = new CodeFactory();
-			String  code = codeFactory.getCode();
-			RegisterValidate rv	= new RegisterValidate();
-			System.out.println(CodeFactory.encrypt(code));
-			rv.sendEmail(info.getRegistEmail(), CodeFactory.encrypt(code));
-			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
-			String date = df.format(new Date());
-			Email email = new Email();
-			email.setEmail(info.getRegistEmail());
-			email.setCode(code);
-			email.setDate(date);
-			email.setState(false);
-			emailService.insertEamil(email);
-		}	
-		//3、将名字和密码插入到user表中
-		User user = new User();
-		user.setUserName(info.getRegistName());
-		user.setUserPwd(info.getRegistPwd());
-		int id = userService.getUserId(user);
-		//更新表
-		emailService.updateEmailUid(id, info.getRegistEmail());
+		}
 		result.setKey("success");
-		result.setMessage("注册成功");
+		result.setMessage(result.LoginOut);
 		JSONObject json = JSONObject.fromObject(result);
 		return json.toString();
 	}
 	
-	//验证码
+	
+	/**
+	* 
+	* @Title: getVerify
+	* @Description:验证码模块刷新
+	* @param：
+	* @return：
+	* @throws：
+	 */
 	@RequestMapping(value = "/getVerify")
     public void getVerify(HttpServletRequest request, HttpServletResponse response){
         response.setContentType("image/jpeg");//设置相应类型,告诉浏览器输出的内容为图片
@@ -148,4 +84,115 @@ public class UserController {
             e.printStackTrace();
         }
     }
+	
+	//用户登录
+	@RequestMapping(value="login",method=RequestMethod.POST,produces="application/json;charset=utf-8")
+	@ResponseBody
+	public String login(@RequestBody User u,HttpSession session) {
+		//首先判断验证码是否正确
+		String random = (String) session.getAttribute("RANDOMVALIDATECODEKEY");
+		if(!(u.getCode().equals(random))) {
+        	result.setKey("success");
+    		result.setMessage(result.CodeError);
+    		JSONObject json = JSONObject.fromObject(result);
+    		return json.toString();
+        }
+		
+		//用户登录逻辑
+		User user = new User();
+		user.setUserName(u.getUserName());
+		user.setUserPwd(u.getUserPwd());
+		User findUser = userService.findUserByName(user);
+		if (findUser == null) {
+			result.setKey("success");
+			result.setMessage(result.LoginError);
+			JSONObject json = JSONObject.fromObject(result);
+			return json.toString();
+		}
+		boolean activate = userService.findDeviceByID(findUser.getUserID());
+		if(!activate) {
+			result.setKey("success");
+			result.setMessage(result.DeviceOFF);
+			session.setAttribute("username", findUser.getUserName());//添加用户名
+			JSONObject json = JSONObject.fromObject(result);
+			return json.toString();
+		}
+		result.setKey("success");
+		result.setMessage(result.LoginSuccess);
+		session.setAttribute("user", findUser);
+		JSONObject json = JSONObject.fromObject(result);
+		return json.toString();
+	}
+	
+	//用户注册
+	@RequestMapping(value="regist",method=RequestMethod.POST,produces="application/json;charset=utf-8")
+	@ResponseBody
+	public String regist(@RequestBody User u) {
+		//1、首先判断用户名和邮箱是否被使用过
+		String existUser = userService.findUserByName(u.getUserName());
+		if( existUser.equals(result.NameExisted)) {
+			result.setKey("success");
+			result.setMessage(result.NameExisted);
+			JSONObject json = JSONObject.fromObject(result);
+			return json.toString();
+		}else {
+			if( u.getUserEmail().equals(userService.findUserEmail(u.getUserEmail()))) {
+				result.setKey("success");
+				result.setMessage(result.EmailExist);
+				JSONObject json = JSONObject.fromObject(result);
+				return json.toString();
+			}
+	
+		}
+		
+		//2、插入用户数据
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+		String date = df.format(new Date());
+		CodeFactory codeFactory = new CodeFactory();
+		User user = new User();
+		user.setUserName(u.getUserName());
+		user.setUserPwd(codeFactory.encrypt(u.getUserPwd()));
+		user.setUserEmail(u.getUserEmail());
+		user.setRegistTime(date);
+		
+		int getUid = userService.saveUser(user);
+		deviceService.insertDevice(getUid);
+		result.setKey("success");
+		result.setMessage(result.RegistSuccess);
+		JSONObject json = JSONObject.fromObject(result);
+		return json.toString();
+		
+	}
+	
+	//用户注销
+	@RequestMapping(value="logout",method=RequestMethod.POST,produces="application/json;charset=utf-8")
+	@ResponseBody
+	public String logout(HttpSession session) {
+		//假如存在用户则注销,注销后定向到登录
+		User user = (User) session.getAttribute("user");
+		if(user != null) {
+			session.removeAttribute("user");
+			result.setKey("success");
+			result.setMessage(result.LoginOut);
+			JSONObject json = JSONObject.fromObject(result);
+			return json.toString();
+		}
+		//不存在用户则提示并定向到登录
+		result.setKey("success");
+		result.setMessage(result.LoginOut);
+		JSONObject json = JSONObject.fromObject(result);
+		return json.toString();
+	}	
+	
+	//显示用户名
+	@RequestMapping(value="welcome",method=RequestMethod.POST,produces="application/json;charset=utf-8")
+	@ResponseBody
+	public String welcome(HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		result.setKey("success");
+		result.setMessage(user.getUserName());
+		System.out.println(user.getUserName());
+		JSONObject json = JSONObject.fromObject(result);
+		return json.toString();
+	}
 }

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cxp.graduate.mapper.DeviceMapper">  
+   <!-- 同步更新device -->
+   <insert id="insertDevice" useGeneratedKeys="true" keyColumn="deviceID" keyProperty="deviceID" parameterType="Int">
+   		insert into device (deviceID) value (#{deviceID});
+	</insert>
+	
+	<!-- 查询数据库中的设备码 -->
+	<!-- select * from unicode; -->
+	<select id="findUniqueCode" resultType="UniCode" parameterType="String">
+		select * from unicode where code = #{code} 
+	</select>
+	
+	<!-- 更新device库的设备码和激活码-->
+   <update id="updateUni" parameterType="UniCode">
+   		update unicode set 
+   			did_uin = #{did_uin}
+   			where code = #{code}
+	</update>
+	
+	<!-- 更新uniquecode库的信息 -->
+	<update id="updateCode" parameterType="Device">
+   		update device set 
+   			uniqueID = #{uniqueID},
+   			activateTime = #{activateTime},
+   			activateCode = #{activateCode},
+   			isActivate =  #{activate}  
+   			where deviceID = #{deviceID} ;
+	</update>
+	
+	<!-- 查询用户的device -->
+	<!-- select * from device where deviceID = 1; -->
+	<resultMap type="Device" id="deviceMap">
+   		<result property="deviceID" column="deviceID"/>
+   		<result property="uniqueID" column="uniqueID"/>
+   		<result property="deviceAddr"  column="deviceAddr"/>
+   	 	<result property="activateTime" column="activateTime"/>
+   	 	<result property="activateCode" column="activateCode"/>
+   		<result property="activate" column="isActivate"/>
+   		<result property="MQ2Switch" column="MQ2Switch"/>
+   		<result property="DHT11Switch" column="DHT11Switch"/>
+   		<result property="FLAMESwitch" column="FLAMESwitch"/>
+    </resultMap>
+	<select id="selectById" resultMap="deviceMap" parameterType="int">
+		select * from device where deviceID = #{deviceID};
+	</select>
+	
+	
+</mapper>
