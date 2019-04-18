@@ -4,7 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
+import cxp.graduate.pojo.Sensor;
+import cxp.graduate.pojo.UpSensorData;
+import cxp.graduate.service.DeviceService;
+import cxp.graduate.service.SensorService;
 import net.sf.json.JSONObject;
 
 /**
@@ -18,7 +24,6 @@ public class ReceiveThread implements Runnable{
 
 	private Socket socket;
 	private Flag flag;
-	private String msg = "";
 	
 	public ReceiveThread(Socket socket,Flag flag) {
 		// TODO Auto-generated constructor stub
@@ -32,10 +37,37 @@ public class ReceiveThread implements Runnable{
 			//检测客户端断开手段一，判断是否收到的消息为null
 			while(true && (flag.getFlag())) {
 				BufferedReader br=new BufferedReader(new InputStreamReader(socket.getInputStream()));
-				if((msg = br.readLine() )!= null) {
-					System.out.println(msg);
-					String jsonMsg = msg;
-					JSONObject jsonObject = JSONObject.fromObject(jsonMsg);
+				if(br.readLine() != null) {
+					String getClient = br.readLine();
+					//建立连接后，解析json
+					JSONObject object = (JSONObject) JSONObject.fromObject(getClient);
+					
+					//首先获取设备的id
+					DeviceService ds = SocketUtils.getBeanByName("deviceService");
+					String str = (String) object.get("identity");
+					System.out.println(str);
+					
+					//获取烟雾传感器、温度传感器、湿度传感器、火焰报警器、GPS地址、安装位置
+					UpSensorData data = (UpSensorData) JSONObject.toBean(object,UpSensorData.class);
+					System.out.println(data);
+					
+					Sensor sensor = new Sensor();
+					SimpleDateFormat df = new SimpleDateFormat("yyyy:MM:dd hh:mm:ss");//设置日期格式
+					String date = df.format(new Date());
+					sensor.setIntime(date);
+					sensor.setYanwu(data.getYanwu());
+					sensor.setWendu(data.getWendu());
+					sensor.setShidu(data.getShidu());
+					sensor.setFlame(data.isFlame());
+					sensor.setGpsaddr(data.getGpsaddr());
+					sensor.setSetaddr(data.getSetaddr());
+					sensor.setDid_sid(flag.getDeviceId());
+					
+					//查询条数
+					//首先查询是否存在有十条数据
+					SensorService ss = SocketUtils.getBeanByName("sensorService");
+					ss.insertSensorData(sensor);
+					
 				}else {
 					flag.setFlag(false); 
 				}	

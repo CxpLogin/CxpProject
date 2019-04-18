@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>设备激活</title>
+		<!--layui Start-->
+		<link rel="stylesheet" href="../../layui/css/layui.css">
+		<link rel="stylesheet" href="../../css/form.css" />
+		<!-- layui End-->	
+		<script type="text/javascript" src="../../js/jquery-3.3.1.js" ></script>
+		
+		<script type="text/javascript">
+			$(document).ready(function () {	
+				$("#getPwd").click(function () {
+					//获取邮箱框的邮箱
+					var em = $("#email").val();
+					if(em == ""){
+				    	alert('邮箱不能为空');
+				    }else if(em != ""){
+				        var reg =  /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+				        if(!(reg.test(em))){
+				        	alert("邮箱格式不正确，请重新输入！");
+				        }else{
+				        	var msg = "?email=" + em;
+				        	$.ajax({
+					        	type: "POST",//方法类型
+					        	async:false,
+					            url: "/graduation/user/forgetpwd" + msg ,//url
+					            contentType:"application/json;charset=utf-8",
+					            success: function (result) {
+					            	var json= JSON.stringify(result);//将服务器传递json对象转成json字符串
+					            	var obj = eval('(' + json + ')');//将json字符串转成json对象	
+					            	if(obj.key == "success"){
+					            		if(obj.message == "密码已发送到您邮箱，请注意查收"){
+					            			alert(obj.message);     
+						            	}
+					            		
+					            	}
+					            },
+					            error : function(result) {
+					            	alert("其他问题");
+					            }
+					        });
+					  		return false;
+					    };
+				    }
+				})			
+			});
+		</script>
+	</head>
+<body>
+	<script type="text/javascript" src="https://cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>
+	<div class="panel">
+		<div style="text-align: center;">
+		<div class="layui-collapse" lay-filter="test">
+		  	<div class="layui-colla-item">
+		    	<h2 class="layui-colla-title">填入你注册过的邮箱</h2>
+		    	<div class="layui-colla-content">
+		      		<form id="codeForm" class="form layui-form" action="" method="post">
+				        <div class="row layui-form-item">
+				            <label class="layui-form-label"><i class="layui-icon layui-icon-tips" style="font-size: 30px; color: #1E9FFF;"></i></label>
+				            <div class="layui-input-block">
+				                <input type="text" id="email" placeholder="注册时使用的邮箱" class="layui-input">
+				            </div>
+				        </div>
+				        <button class="layui-btn layui-btn-radius layui-btn-normal" id="getPwd">找回密码</button>					
+		      		</form>
+		    	</div>
+		  	</div>
+		</div>	
+	</div>
+
+<script src="../../layui/layui.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+layui.use(['element', 'layer'], function(){
+  var element = layui.element;
+  var layer = layui.layer;
+  
+  //监听折叠
+//element.on('collapse(test)', function(data){
+//  layer.msg('展开状态：'+ data.show);
+//});
+});
+</script>
+</body>
+</html>

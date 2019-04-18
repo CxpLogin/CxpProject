@@ -2,54 +2,12 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>设备激活</title>
+		<title>邮箱激活</title>
 		<!--layui Start-->
 		<link rel="stylesheet" href="../../layui/css/layui.css">
 		<link rel="stylesheet" href="../../css/form.css" />
 		<!-- layui End-->	
 		<script type="text/javascript" src="../../js/jquery-3.3.1.js" ></script>
-		
-		<script type="text/javascript">
-			$(document).ready(function () {	
-				$("#getCode").click(function () {
-					//获取邮箱框的邮箱
-					var em = $("#email").val();
-					if(em == ""){
-				    	alert('邮箱不能为空');
-				    }else if(em != ""){
-				        var reg =  /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
-				        if(!(reg.test(em))){
-				        	alert("邮箱格式不正确，请重新输入！");
-				        }else{
-				        	var msg = "?email=" + em;
-				        	$.ajax({
-					        	type: "POST",//方法类型
-					        	async:false,
-					            url: "/graduation/user/email" + msg ,//url
-					            contentType:"application/json;charset=utf-8",
-					            success: function (result) {
-					            	var json= JSON.stringify(result);//将服务器传递json对象转成json字符串
-					            	var obj = eval('(' + json + ')');//将json字符串转成json对象	
-					            	if(obj.key == "success"){
-					            		if(obj.message == "验证码已发送到您邮箱，请注意查收"){
-					            			alert(obj.message);     
-						            	}
-					            		if(obj.message == "你给定的邮箱和你注册的邮箱不一致"){
-					            			alert(obj.message);     
-						            	}
-					            		
-					            	}
-					            },
-					            error : function(result) {
-					            	alert("其他问题");
-					            }
-					        });
-					  		return false;
-					    };
-				    }
-				})			
-			});
-		</script>
 		
 		<!-- 激活码表单 -->
 		<script type="text/javascript">
@@ -61,30 +19,16 @@
 						values[params[x].name] = params[x].value;
 					}
 					var idata = JSON.stringify(values);
+					alert(idata);
 					$.ajax({
 			        	type: "POST",//方法类型
 			        	async:false,
-			            url: "/graduation/user/emailCode" ,//url
+			            url: "/graduation/user/email" ,//url
 			            contentType:"application/json;charset=utf-8",
 			            data: idata,
 			            success: function (result) {
 			            	var json= JSON.stringify(result);//将服务器传递json对象转成json字符串
 			            	var obj = eval('(' + json + ')');//将json字符串转成json对象
-		                   	if(obj.key == "success"){
-		                   		if(obj.message == "查无此设备码"){
-			            			alert(obj.message);     
-				            	}
-		                   		if(obj.message == "存在此设备码但已被使用"){
-			            			alert(obj.message);     
-				            	}
-		                   		if(obj.message == "激活失败请检查是否输入正确码"){
-			            			alert(obj.message);     
-				            	}
-		                   		if(obj.message == "激活成功"){
-			            			alert(obj.message);  
-			            			location.href = "user-login.html"//需要跳转的地址
-				            	}
-		                   	}
 		                   		
 			            },
 			            error : function(result) {
@@ -105,28 +49,15 @@
 		<div style="text-align: center;">
 		<div class="layui-collapse" lay-filter="test">
 		  	<div class="layui-colla-item">
-		    	<h2 class="layui-colla-title">填写设备码之后你注册邮箱将收到加密的字符，复制到加密框并提交</h2>
+		    	<h2 class="layui-colla-title">请及时查看邮箱获取激活码并激活你当前状态</h2>
 		    	<div class="layui-colla-content">
 		      		<form id="codeForm" class="form layui-form" action="" method="post">
-						<div class="row layui-form-item">
-				            <label class="layui-form-label"><i class="layui-icon layui-icon-tips" style="font-size: 30px; color: #1E9FFF;"></i></label>
-				            <div class="layui-input-block">
-				                <input type="text" name="uniqueID" placeholder="设备唯一码" class="layui-input">
-				            </div>
-				        </div>
 				        <div class="row layui-form-item">
 				            <label class="layui-form-label"><i class="layui-icon layui-icon-tips" style="font-size: 30px; color: #1E9FFF;"></i></label>
 				            <div class="layui-input-block">
-				                <input type="text" name="activateCode" placeholder="激活码" class="layui-input">
+				                <input type="text" name="u_emailcode" placeholder="激活码" class="layui-input">
 				            </div>
 				        </div>
-				        <div class="row layui-form-item">
-				            <label class="layui-form-label"><i class="layui-icon layui-icon-tips" style="font-size: 30px; color: #1E9FFF;"></i></label>
-				            <div class="layui-input-block">
-				                <input type="text" id="email" placeholder="注册时使用的邮箱" class="layui-input">
-				            </div>
-				        </div>
-				        <button class="layui-btn layui-btn-radius layui-btn-normal" id="getCode">获取激活码</button>
 						<button class="layui-btn layui-btn-radius layui-btn-normal"id="submitCode" >提交</button>
 		      		</form>
 		    	</div>

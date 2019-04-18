@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cxp.graduate.mapper.SensorMapper;
+import cxp.graduate.pojo.Device;
+import cxp.graduate.pojo.MapBean;
 import cxp.graduate.pojo.Sensor;
 import cxp.graduate.service.SensorService;
 import net.sf.json.JSONArray;
+
 
 @Service("sensorService")
 public class SensorServiceImpl implements SensorService {
@@ -17,12 +20,30 @@ public class SensorServiceImpl implements SensorService {
 	private SensorMapper sensorMapper;
 
 	@Override
-	public String selectById(int userID) {
+	public void insertSensorData(Sensor sensor) {
 		// TODO Auto-generated method stub
-		List<Sensor> list = sensorMapper.selectByDid(userID);
+		//首先查询是否存在有十条数据
+		int count = sensorMapper.selectSensorCount(sensor.getDid_sid());
+		if(count == 10) {
+			sensorMapper.deleteFirstTime(sensor.getDid_sid());
+		}
+		sensorMapper.insertData(sensor);
+	}
+
+	@Override
+	public String selectSensorData(int did_sid) {
+		// TODO Auto-generated method stub
+		//获取设备的id
+		List<Sensor> list = sensorMapper.selectByDid(did_sid);
 		JSONArray jsonArray = JSONArray.fromObject(list);
 		return jsonArray.toString();
 	}
-	
 
+	@Override
+	public List<Sensor> selectSensorSetAddr(int did_sid) {
+		// TODO Auto-generated method stub
+		return sensorMapper.selectSensorSetAddr(did_sid);
+	}
+
+	
 }

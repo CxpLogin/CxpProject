@@ -2,81 +2,74 @@ package cxp.graduate.pojo;
 
 import java.io.Serializable;
 
+/**
+ * @ClassName：device
+ * @Description: 设备表
+ * @date:
+ */
 public class Device implements Serializable{
-	private static final long serialVersionUID = 1L;
-	/**
-	 * @ClassName：Device
-	 * @Description: 设备信息的Bean
-	 * @date: 2019-03-07 V1.1
-	 */
-	
-	private int deviceID;//设备主键ID
-	private String uniqueID;//设备唯一指定ID
-	private String deviceAddr;//设备地址
-	private String activateTime;//设备激活时间
-	private String activateCode;//设备激活码
-	private boolean activate;//设备是否激活
-	private boolean MQ2Switch;
-	private boolean DHT11Switch;
-	private boolean FLAMESwitch;
-	public int getDeviceID() {
-		return deviceID;
+	private static final long serialVersionUID = 1152194497771486295L;
+	private int d_id;//设备自增id
+	private String d_code;//设备出厂编码
+	private String d_physics;//设备经纬度
+	private String d_instaladdr;//设备安装地址
+	private String d_setaddr;//设备设置安装地址
+	private String d_activattime;//设备激活时间
+	private boolean d_state;//设备当前状态
+	private int uid_did;
+	public int getD_id() {
+		return d_id;
 	}
-	public void setDeviceID(int deviceID) {
-		this.deviceID = deviceID;
+	public void setD_id(int d_id) {
+		this.d_id = d_id;
 	}
-	public String getUniqueID() {
-		return uniqueID;
+	public String getD_code() {
+		return d_code;
 	}
-	public void setUniqueID(String uniqueID) {
-		this.uniqueID = uniqueID;
+	public void setD_code(String d_code) {
+		this.d_code = d_code;
 	}
-	public String getDeviceAddr() {
-		return deviceAddr;
+	public String getD_physics() {
+		return d_physics;
 	}
-	public void setDeviceAddr(String deviceAddr) {
-		this.deviceAddr = deviceAddr;
+	public void setD_physics(String d_physics) {
+		this.d_physics = d_physics;
 	}
-	public String getActivateTime() {
-		return activateTime;
+	public String getD_instaladdr() {
+		return d_instaladdr;
 	}
-	public void setActivateTime(String activateTime) {
-		this.activateTime = activateTime;
+	public void setD_instaladdr(String d_instaladdr) {
+		this.d_instaladdr = d_instaladdr;
 	}
-	public String getActivateCode() {
-		return activateCode;
+	public String getD_setaddr() {
+		return d_setaddr;
 	}
-	public void setActivateCode(String activateCode) {
-		this.activateCode = activateCode;
+	public void setD_setaddr(String d_setaddr) {
+		this.d_setaddr = d_setaddr;
 	}
-	public boolean isActivate() {
-		return activate;
+	public String getD_activattime() {
+		return d_activattime;
 	}
-	public void setActivate(boolean activate) {
-		this.activate = activate;
+	public void setD_activattime(String d_activattime) {
+		this.d_activattime = d_activattime;
 	}
-	public boolean isMQ2Switch() {
-		return MQ2Switch;
+	public boolean isD_state() {
+		return d_state;
 	}
-	public void setMQ2Switch(boolean mQ2Switch) {
-		MQ2Switch = mQ2Switch;
+	public void setD_state(boolean d_state) {
+		this.d_state = d_state;
 	}
-	public boolean isDHT11Switch() {
-		return DHT11Switch;
+	public int getUid_did() {
+		return uid_did;
 	}
-	public void setDHT11Switch(boolean dHT11Switch) {
-		DHT11Switch = dHT11Switch;
+	public void setUid_did(int uid_did) {
+		this.uid_did = uid_did;
 	}
-	public boolean isFLAMESwitch() {
-		return FLAMESwitch;
-	}
-	public void setFLAMESwitch(boolean fLAMESwitch) {
-		FLAMESwitch = fLAMESwitch;
+	@Override
+	public String toString() {
+		return "Device [d_id=" + d_id + ", d_code=" + d_code + ", d_physics=" + d_physics + ", d_instaladdr="
+				+ d_instaladdr + ", d_setaddr=" + d_setaddr + ", d_activattime=" + d_activattime + ", d_state="
+				+ d_state + ", uid_did=" + uid_did + "]";
 	}
 	
-	
-	//{"total":1,"message":"hello","rows":{"item":[{"deviceAddr":"广西南宁","activateCode":"KOPLIU","DHT11Switch":true,"FLAMESwitch":true,"activate":true,"activateTime":"2019-03-07","deviceID":1,"MQ2Switch":true,"uniqueID":"CKLOPD"}]},"status":200}
-	
-	
-
 }

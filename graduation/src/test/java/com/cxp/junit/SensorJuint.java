@@ -12,7 +12,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import cxp.graduate.mapper.SensorMapper;
+import cxp.graduate.pojo.Device;
 import cxp.graduate.pojo.Sensor;
+import cxp.graduate.service.SensorService;
 import net.sf.json.JSONArray;
 
 
@@ -22,61 +24,69 @@ public class SensorJuint {
 	
 	@Autowired
 	private SensorMapper sensorMapper;
+	@Autowired
+	private SensorService sensorService;
 	
-	/*获取10条数据转成list集合*/
+	/*查询数据库是否有十条数据*/
 	@Test
 	public void demo() {
-		List<Sensor> list = sensorMapper.selectByDid(1);
-		for (Sensor sensors : list) {
-			System.out.println(sensors);
-		}
-		//获取时间
-		for(int i = 0;i < list.size();i++) {
-			System.out.println(list.get(i).getIntime());
-		}
-		//获取烟雾传感器数据
-		for(int i = 0;i < list.size();i++) {
-			System.out.println(list.get(i).getMq2());
-		}
+		//测试sensorMapper
+		/*
+		int num = sensorMapper.selectSensorCount(1);
+		System.out.println(num);
+		*/
 	}
 	
-	/*查询当前数据库有多少条数据*/
-	@Test
-	public void demo1() {
-		System.out.println(sensorMapper.selectCount(1));
-	}
 	
-	/*删除时间最远的一条数据*/
-	@Test
-	public void demo2() {
-		sensorMapper.deleteFirstTime(1);
-	}
 	
 	/*插入数据的时候删除第一条数据*/
 	@Test
-	public void demo3() {
+	public void demo1() {
 		Sensor sensor = new Sensor();
 		SimpleDateFormat df = new SimpleDateFormat("yyyy:MM:dd hh:mm:ss");//设置日期格式
 		String date = df.format(new Date());
 		sensor.setIntime(date);
-		sensor.setMq2((float) 22.65);
-		sensor.setDht11((float) 22.65);
-		sensor.setFlame((float) 25.62);
+		sensor.setYanwu((float) 22.22);
+		sensor.setWendu((float) 22.22);
+		sensor.setShidu((float) 25.22);
+		sensor.setFlame(false);
+		sensor.setGpsaddr("广西桂林");
+		sensor.setSetaddr("客厅");
 		sensor.setDid_sid(1);
 		//首先查询是否存在有十条数据
-		int count = sensorMapper.selectCount(1);
+		int count = sensorMapper.selectSensorCount(1);
 		if(count == 10) {
 			sensorMapper.deleteFirstTime(1);
 		}
-		sensorMapper.insertTime(sensor);
+		System.out.println(count);
+		System.out.println(sensor);
+		sensorMapper.insertData(sensor);
 	}
 	
+	//获取设备id
+	@Test
+	public void demo2() {
+		Device device = new Device();
+		device.setUid_did(1);
+		device.setD_setaddr("客厅");
+		int d_id = sensorMapper.selectByUidAndSetAddr(device);
+		System.out.println(d_id);
+	}
+
 	/*将获取的list集合转成json字符串*/
 	@Test
-	public void demo4() {
+	public void demo3() {
+		/*
+		//mapper测试
 		List<Sensor> list = sensorMapper.selectByDid(1);
 		JSONArray jsonArray = JSONArray.fromObject(list);
 		System.out.println(jsonArray.toString());
+		*/
+		//service测试
+		String str = sensorService.selectSensorData(1);
+		System.out.println(str);
+		
 	}
+	
 	
 }

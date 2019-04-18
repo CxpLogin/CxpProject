@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cxp.graduate.pojo.LoginUser;
 import cxp.graduate.pojo.User;
 import cxp.graduate.service.DeviceService;
 import cxp.graduate.service.UserService;
 import cxp.graduate.utils.CodeFactory;
+import cxp.graduate.utils.EmailValidateCode;
 import cxp.graduate.utils.RandomValidateCode;
 import cxp.graduate.utils.UserResultUtils;
 import net.sf.json.JSONObject;
@@ -50,7 +52,7 @@ public class UserController {
 	public String check(HttpSession session) {
 		User user = (User) session.getAttribute("user");
 		//查看session域中没有user
-		if(user != null) {
+		if(user != null && user.isU_isact() && (user.getU_email() !=null)) {
 			result.setKey("success");
 			result.setMessage(result.LoginIn);
 			JSONObject json = JSONObject.fromObject(result);
@@ -61,10 +63,8 @@ public class UserController {
 		JSONObject json = JSONObject.fromObject(result);
 		return json.toString();
 	}
-	
-	
+		
 	/**
-	* 
 	* @Title: getVerify
 	* @Description:验证码模块刷新
 	* @param：
@@ -88,10 +88,10 @@ public class UserController {
 	//用户登录
 	@RequestMapping(value="login",method=RequestMethod.POST,produces="application/json;charset=utf-8")
 	@ResponseBody
-	public String login(@RequestBody User u,HttpSession session) {
+	public String login(@RequestBody LoginUser lu,HttpSession session) {
 		//首先判断验证码是否正确
 		String random = (String) session.getAttribute("RANDOMVALIDATECODEKEY");
-		if(!(u.getCode().equals(random))) {
+		if(!(lu.getCode().equals(random))) {
         	result.setKey("success");
     		result.setMessage(result.CodeError);
     		JSONObject json = JSONObject.fromObject(result);
@@ -100,69 +100,102 @@ public class UserController {
 		
 		//用户登录逻辑
 		User user = new User();
-		user.setUserName(u.getUserName());
-		user.setUserPwd(u.getUserPwd());
-		User findUser = userService.findUserByName(user);
+		user.setU_name(lu.getUserName());
+		user.setU_pwd(lu.getUserPwd());
+		User findUser = userService.findUser(user);
 		if (findUser == null) {
 			result.setKey("success");
 			result.setMessage(result.LoginError);
 			JSONObject json = JSONObject.fromObject(result);
 			return json.toString();
 		}
-		boolean activate = userService.findDeviceByID(findUser.getUserID());
-		if(!activate) {
+		session.setAttribute("user", findUser);//假如session
+		
+		//用户是否激活邮箱、是否激活设备 
+		if(findUser.getU_emailcode() == null) {
+			
+			//生成加密文
+			CodeFactory codeFactory = new CodeFactory();
+			String  code = codeFactory.getCode();//生成随机字符串
+			session.setAttribute("activateCode", code);
+			String DeCode = CodeFactory.encrypt(code);//生成加密文
+			System.out.println( "生成的随机code：" + DeCode);
+
+			//以当前用户的邮箱进行邮件的发送
+			EmailValidateCode evc = new EmailValidateCode();
+			evc.sendEmail(findUser.getU_email(), DeCode);	
 			result.setKey("success");
-			result.setMessage(result.DeviceOFF);
-			session.setAttribute("username", findUser.getUserName());//添加用户名
+			result.setMessage("请激活邮箱");
 			JSONObject json = JSONObject.fromObject(result);
 			return json.toString();
 		}
+		
+		if(!(findUser.isU_isact())) {
+			System.out.println(findUser);
+			result.setKey("success");
+			result.setMessage(result.DeviceOFF);
+			JSONObject json = JSONObject.fromObject(result);
+			return json.toString();
+		}
+		
 		result.setKey("success");
 		result.setMessage(result.LoginSuccess);
-		session.setAttribute("user", findUser);
 		JSONObject json = JSONObject.fromObject(result);
 		return json.toString();
-	}
+    }
 	
 	//用户注册
 	@RequestMapping(value="regist",method=RequestMethod.POST,produces="application/json;charset=utf-8")
 	@ResponseBody
 	public String regist(@RequestBody User u) {
 		//1、首先判断用户名和邮箱是否被使用过
-		String existUser = userService.findUserByName(u.getUserName());
+		String existUser = userService.findUserByName(u.getU_name());
 		if( existUser.equals(result.NameExisted)) {
 			result.setKey("success");
 			result.setMessage(result.NameExisted);
 			JSONObject json = JSONObject.fromObject(result);
 			return json.toString();
-		}else {
-			if( u.getUserEmail().equals(userService.findUserEmail(u.getUserEmail()))) {
-				result.setKey("success");
-				result.setMessage(result.EmailExist);
-				JSONObject json = JSONObject.fromObject(result);
-				return json.toString();
-			}
-	
 		}
-		
-		//2、插入用户数据
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
-		String date = df.format(new Date());
-		CodeFactory codeFactory = new CodeFactory();
+		//2、判断邮箱是否存在
+		if(!(userService.findUserEmail(u.getU_email()))) {
+			result.setKey("success");
+			result.setMessage(result.EmailExist);
+			JSONObject json = JSONObject.fromObject(result);
+			return json.toString();
+		}
+		//3、填入用户名、密码和邮箱
+		CodeFactory codeFactory = new CodeFactory();//加密密码
 		User user = new User();
-		user.setUserName(u.getUserName());
-		user.setUserPwd(codeFactory.encrypt(u.getUserPwd()));
-		user.setUserEmail(u.getUserEmail());
-		user.setRegistTime(date);
+		user.setU_name(u.getU_name());
+		user.setU_pwd(codeFactory.encrypt(u.getU_pwd()));
+		user.setU_email(u.getU_email());
+		userService.saveUser(user);
 		
-		int getUid = userService.saveUser(user);
-		deviceService.insertDevice(getUid);
 		result.setKey("success");
 		result.setMessage(result.RegistSuccess);
 		JSONObject json = JSONObject.fromObject(result);
 		return json.toString();
-		
 	}
+	
+	/**
+	* 
+	* @Title: forgetpwd
+	* @Description:验证码模块刷新
+	* @param：
+	* @return：
+	* @throws：
+	 */
+	@RequestMapping(value="forgetpwd",method=RequestMethod.POST,produces="application/json;charset=utf-8")
+	@ResponseBody
+	public String forgetpwd(HttpServletRequest request) {
+		EmailValidateCode evc = new EmailValidateCode();
+		String email = request.getParameter("email");
+		evc.sendEmail(email, userService.findUserPwd(email));	
+		result.setKey("success");
+		result.setMessage(result.SendEmail);
+		JSONObject json = JSONObject.fromObject(result);
+		return json.toString();
+    }
 	
 	//用户注销
 	@RequestMapping(value="logout",method=RequestMethod.POST,produces="application/json;charset=utf-8")
@@ -182,7 +215,7 @@ public class UserController {
 		result.setMessage(result.LoginOut);
 		JSONObject json = JSONObject.fromObject(result);
 		return json.toString();
-	}	
+	}
 	
 	//显示用户名
 	@RequestMapping(value="welcome",method=RequestMethod.POST,produces="application/json;charset=utf-8")
@@ -190,9 +223,10 @@ public class UserController {
 	public String welcome(HttpSession session) {
 		User user = (User) session.getAttribute("user");
 		result.setKey("success");
-		result.setMessage(user.getUserName());
-		System.out.println(user.getUserName());
+		result.setMessage(user.getU_name());
+		System.out.println(user.getU_name());
 		JSONObject json = JSONObject.fromObject(result);
 		return json.toString();
 	}
+
 }

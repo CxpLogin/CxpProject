@@ -1,47 +1,70 @@
 package cxp.graduate.pojo;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
- * @ClassName：SensorData
+ * @ClassName：Sensor
  * @Description: 传感器数据
- * @date: 2019-03-11 V1.1
+ * @date: 2019-04-16
  */
 public class Sensor implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
-	
+	private static final long serialVersionUID = 1244166695900651730L;
+	private int s_id;
+	private float yanwu;
+	private float wendu;
+	private float shidu;
+	private boolean flame;
+	private String setaddr;
+	private String gpsaddr;
 	private String intime;
-	private float mq2;
-	private float dht11;
-	private float flame;
 	private int did_sid;
+	public int getS_id() {
+		return s_id;
+	}
+	public void setS_id(int s_id) {
+		this.s_id = s_id;
+	}
+	public float getYanwu() {
+		return yanwu;
+	}
+	public void setYanwu(float yanwu) {
+		this.yanwu = yanwu;
+	}
+	public float getWendu() {
+		return wendu;
+	}
+	public void setWendu(float wendu) {
+		this.wendu = wendu;
+	}
+	public float getShidu() {
+		return shidu;
+	}
+	public void setShidu(float shidu) {
+		this.shidu = shidu;
+	}
+	public boolean isFlame() {
+		return flame;
+	}
+	public void setFlame(boolean flame) {
+		this.flame = flame;
+	}
+	public String getSetaddr() {
+		return setaddr;
+	}
+	public void setSetaddr(String setaddr) {
+		this.setaddr = setaddr;
+	}
+	public String getGpsaddr() {
+		return gpsaddr;
+	}
+	public void setGpsaddr(String gpsaddr) {
+		this.gpsaddr = gpsaddr;
+	}
 	public String getIntime() {
 		return intime;
 	}
 	public void setIntime(String intime) {
 		this.intime = intime;
-	}
-	public float getMq2() {
-		return mq2;
-	}
-	public void setMq2(float mq2) {
-		this.mq2 = mq2;
-	}
-	
-	public float getDht11() {
-		return dht11;
-	}
-	public void setDht11(float dht11) {
-		this.dht11 = dht11;
-	}
-	
-	public float getFlame() {
-		return flame;
-	}
-	public void setFlame(float flame) {
-		this.flame = flame;
 	}
 	public int getDid_sid() {
 		return did_sid;
@@ -51,8 +74,10 @@ public class Sensor implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "Sensor [intime=" + intime + ", mq2=" + mq2 + ", dht11=" + dht11 + ", flame=" + flame + ", did_sid="
+		return "Sensor [s_id=" + s_id + ", yanwu=" + yanwu + ", wendu=" + wendu + ", shidu=" + shidu + ", flame="
+				+ flame + ", setaddr=" + setaddr + ", gpsaddr=" + gpsaddr + ", intime=" + intime + ", did_sid="
 				+ did_sid + "]";
 	}
 	
+
 }

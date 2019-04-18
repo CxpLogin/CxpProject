@@ -67,17 +67,17 @@ layui.use('table', function(){
   
   table.render({
     elem: '#test'
-    ,url:'/graduation/user/device'
+    ,url:'/graduation/user/devicemsg'
     ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
     ,toolbar: true
     ,cols: [[
-      {field:'uniqueID', title: '设备码', align: 'center'}
-      ,{field:'deviceAddr', title: '设备安放地址', align: 'center'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
-      ,{field:'activateTime', title: '设备激活时间', align: 'center'}
-      ,{field:'activate', title: '是否激活', align: 'center'}
-      ,{field:'MQ2Switch', title: '烟雾传感器状态', align: 'center'}
-      ,{field:'DHT11Switch', title: '温湿度传感器状态', align: 'center'} //单元格内容水平居中
-      ,{field:'FLAMESwitch', title: '火焰传感器状态', align: 'center'} //单元格内容水平居中
+      {field:'d_id', title: '设备id', align: 'center'}
+      ,{field:'d_code', title: '设备码', align: 'center'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
+      ,{field:'d_physics', title: '经纬度', align: 'd_physics'}
+      ,{field:'d_instaladdr', title: '安装地址', align: 'center'}
+      ,{field:'d_setaddr', title: '家庭安装位置', align: 'center'}
+      ,{field:'d_activattime', title: '激活时间', align: 'center'}
+      ,{field:'d_state', title: '运行状态', align: 'center'} //单元格内容水平居中
     ]]
   	,page: true
   	,response: {

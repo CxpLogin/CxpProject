@@ -3,50 +3,91 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cxp.graduate.mapper.DeviceMapper">  
-   <!-- 同步更新device -->
-   <insert id="insertDevice" useGeneratedKeys="true" keyColumn="deviceID" keyProperty="deviceID" parameterType="Int">
-   		insert into device (deviceID) value (#{deviceID});
-	</insert>
-	
 	<!-- 查询数据库中的设备码 -->
-	<!-- select * from unicode; -->
-	<select id="findUniqueCode" resultType="UniCode" parameterType="String">
-		select * from unicode where code = #{code} 
+	<select id="findDefaultCode" resultType="String" parameterType="String">
+		select code from device_code where code = #{code}
 	</select>
 	
-	<!-- 更新device库的设备码和激活码-->
-   <update id="updateUni" parameterType="UniCode">
-   		update unicode set 
-   			did_uin = #{did_uin}
-   			where code = #{code}
-	</update>
+	<!-- 根据出厂编码查询id -->
+	<select id="findDeviceId" resultType="int" parameterType="String">
+		select d_id from device_code where code = #{code}
+	</select>
 	
-	<!-- 更新uniquecode库的信息 -->
-	<update id="updateCode" parameterType="Device">
+	<!-- 根据出厂编码获取设备 -->
+	<resultMap type="Device" id="deviceMap">
+   		<result property="d_id" column="d_id"/>
+   		<result property="d_code" column="d_code"/>
+   	 	<result property="d_instaladdr" column="d_instaladdr"/>
+   	 	<result property="d_setaddr" column="d_setaddr"/>
+   		<result property="d_activattime" column="d_activattime"/>
+   		<result property="uid_did" column="uid_did"/>
+    </resultMap>
+	<select id="findDevice" resultMap="deviceMap" parameterType="String">
+		select * from device where d_code = #{d_code}
+	</select>
+	
+	<!-- 根据用户id查询设备 -->
+	<select id="selectUserDevice" resultMap="deviceMap" parameterType="int">
+		select * from device where uid_did = #{uid_did}
+	</select>
+	
+	<!-- 查询用户安装位置的个数 -->
+	<select id="findDeviceSetAddrNum" resultType="int" parameterType="Device">
+		select count(*) from device where d_setaddr = #{d_setaddr} and uid_did = #{uid_did}
+	</select>
+	
+	<!-- 根据出厂编码查询设备 -->
+	<select id="findDeviceCode" resultMap="deviceMap" parameterType="String">
+		select * from device where d_code = #{d_code}
+	</select>
+	
+	<!-- 插入设备 -->
+   <insert id="saveDevice" parameterType="Device"  useGeneratedKeys="true" keyProperty="d_id">
+   		insert into device (d_code,d_activattime,uid_did) value (#{d_code},#{d_activattime},#{uid_did})
+	</insert>
+	
+	<!-- 根据d_id查询安装位置 -->
+	<select id="findDeviceSetAddr" resultType="String" parameterType="int">
+		select d_setaddr from device where d_id = #{d_id}
+	</select>
+	
+	<!-- 根据d_id排序查询返回时间最早的且还在工作的-->
+	<!-- (select * from device where uid_did = 1 and d_setaddr = '客厅' and d_state=1 order by d_activattime limit 0,1); -->
+	<select id="findParlourOn" resultType="int" parameterType="Device">
+		select d_id from device where uid_did = #{uid_did} and d_setaddr = #{d_setaddr} and d_state = #{d_state} order by d_activattime limit 0,1;
+	</select>
+	
+	<!-- 更新地址 -->
+	<update id="updateSetAddr" parameterType="Device">
    		update device set 
-   			uniqueID = #{uniqueID},
-   			activateTime = #{activateTime},
-   			activateCode = #{activateCode},
-   			isActivate =  #{activate}  
-   			where deviceID = #{deviceID} ;
+   			d_setaddr = #{d_setaddr},
+   			d_physics =  #{d_physics},
+   			d_instaladdr = #{d_instaladdr} 
+   			where d_id = #{d_id} ;
 	</update>
 	
 	<!-- 查询用户的device -->
 	<!-- select * from device where deviceID = 1; -->
-	<resultMap type="Device" id="deviceMap">
-   		<result property="deviceID" column="deviceID"/>
-   		<result property="uniqueID" column="uniqueID"/>
-   		<result property="deviceAddr"  column="deviceAddr"/>
-   	 	<result property="activateTime" column="activateTime"/>
-   	 	<result property="activateCode" column="activateCode"/>
-   		<result property="activate" column="isActivate"/>
-   		<result property="MQ2Switch" column="MQ2Switch"/>
-   		<result property="DHT11Switch" column="DHT11Switch"/>
-   		<result property="FLAMESwitch" column="FLAMESwitch"/>
+	<resultMap type="Device" id="devicesMap">
+   		<result property="d_id" column="d_id"/>
+   		<result property="d_code" column="d_code"/>
+   	 	<result property="d_physics" column="d_physics"/>
+   	 	<result property="d_instaladdr" column="d_instaladdr"/>
+   	 	<result property="d_setaddr" column="d_setaddr"/>
+   		<result property="d_activattime" column="d_activattime"/>
+   		<result property="d_state" column="d_state"/>
     </resultMap>
-	<select id="selectById" resultMap="deviceMap" parameterType="int">
-		select * from device where deviceID = #{deviceID};
+	<select id="selectById" resultMap="devicesMap" parameterType="int">
+		select * from device where uid_did = #{uid_did};
 	</select>
 	
+	<!-- 更新地址 -->
+	<update id="updateCode" parameterType="Code">
+   		update device_code set d_id = #{d_id} where code = #{code};
+	</update>
 	
+	<!-- 插入指令 -->
+	<insert id="saveOrder" parameterType="Order"  useGeneratedKeys="true" keyProperty="c_id">
+   		insert into control_order (c_relay,c_alarm,c_flag,cid_did) value (#{c_relay},#{c_alarm},#{c_flag},#{cid_did})
+	</insert>
 </mapper>

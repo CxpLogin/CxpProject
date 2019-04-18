@@ -15,47 +15,59 @@ public interface UserMapper {
 	* @return：
 	* @throws：
 	 */
-	public User findUserByName(User user);
+	public User findUser(User user);
 	
 	/**
-	 * 
-	* @Title: findUserEmailByName
-	* @Description: 根据邮箱查询，是否存在邮箱
-	* @param：
-	* @return：
-	* @throws：
-	 */
-	public String findUserEmail(String emailName);
-	
-	/**
-	 * 
 	* @Title: findUserByName
-	* @Description: 查询该用户下的设备信息
-	* @param：int userID
-	* @return：
+	* @Description: 注册时需要查询用户名是否被使用过
+	* @param：String
+	* @return：User
 	* @throws：
 	 */
-	public User findDeviceByID(int userID);
-	
+	public User findUserByName(String u_name);
+
 	/**
-	 * 
-	* @Title: findUserByName
-	* @Description: 根据用户名查询用户是否存在
-	* @param：
-	* @return：
+	* @Title: findUserEmail
+	* @Description: 注册时需要查询用户邮箱是否被使用过
+	* @param：String
+	* @return：User
 	* @throws：
 	 */
-	public User selectUserByName(String name);
-	
+	public User findUserEmail(String u_email);
+
 	/**
-	 * 
-	* @Title: insertUser
-	* @Description: 返回用户自增组件
-	* @param：
-	* @return：
+	* @Title: saveUser
+	* @Description: 保存用户名、密码和邮箱,返回用户自增组件
+	* @param：User
+	* @return：void
 	* @throws：
 	 */
-	public int insertUser(User u);
-	
-	
+	public int saveUser(User user);
+
+	/**
+	* @Title: updateCode
+	* @Description: 更新用户邮箱状态
+	* @param：User
+	* @return：void
+	* @throws：
+	 */
+	public void updateCode(User user);
+
+	/**
+	* @Title: updateAct
+	* @Description: 激活用户设备状态
+	* @param：User
+	* @return：void
+	* @throws：
+	 */
+	public void updateAct(User user);
+
+	/**
+	* @Title: findUserPwd
+	* @Description: 得到用户密码
+	* @param：String
+	* @return：String
+	* @throws：
+	 */
+	public String findUserPwd(String email);	
 }

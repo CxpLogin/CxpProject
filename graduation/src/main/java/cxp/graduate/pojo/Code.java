@@ -1,33 +1,23 @@
 package cxp.graduate.pojo;
-
-import java.io.Serializable;
-
-public class Code implements Serializable{
-	/**
-	 * @ClassName：
-	 * @Description:
-	 * @date:
-	 */
-	
-	private static final long serialVersionUID = 1L;
-	/**
-	 * @ClassName：Code
-	 * @Description: 激活码过程的实体类
-	 * @date:
-	 */
-	private String uniqueCode;
-	private String activateCode;
-	public String getUniqueCode() {
-		return uniqueCode;
+/**
+ * @ClassName：Code
+ * @Description: 出厂编码
+ * @date:
+ */
+public class Code {
+	private String code;
+	private int d_id;
+	public String getCode() {
+		return code;
 	}
-	public void setUniqueCode(String uniqueCode) {
-		this.uniqueCode = uniqueCode;
+	public void setCode(String code) {
+		this.code = code;
 	}
-	public String getActivateCode() {
-		return activateCode;
+	public int getD_id() {
+		return d_id;
 	}
-	public void setActivateCode(String activateCode) {
-		this.activateCode = activateCode;
+	public void setD_id(int d_id) {
+		this.d_id = d_id;
 	}
 	
 }

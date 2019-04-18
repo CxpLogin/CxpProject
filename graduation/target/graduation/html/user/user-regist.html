@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>普通用户注册界面</title>
+		<!--layui Start-->
+		<link rel="stylesheet" href="../../layui/css/layui.css">
+		<link rel="stylesheet" href="../../css/form.css" />
+		<script type="text/javascript" src="../../js/jquery-3.3.1.js" ></script>
+		<!-- layui End-->
+		<!-- 登录表单 -->
+		<script type="text/javascript">
+			$(document).ready(function () {
+				$("#rg_btn").click(function () {
+					var params = $("#rg_form").serializeArray();
+					var values = {};
+					for( x in params ){
+						values[params[x].name] = params[x].value;
+					}
+					var idata = JSON.stringify(values);
+					alert(idata);
+					var obj = eval('(' + idata + ')');//将json字符串转成json对象
+					var pass = obj.userPwd;
+					var email = obj.userEmail;
+					if(!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(obj.userName)){
+					      alert("用户名含有特殊字符");
+					}else if(/(^\_)|(\__)|(\_+$)/.test(obj.userName)){
+						alert('用户名首尾不能出现下划线\'_\'');
+					}else if(/^\d+\d+\d$/.test(obj.userName)){
+				    	alert('用户名不能全为数字');
+				    }else{
+				    	if(pass.length < 6 && pass.length < 12){
+					    	alert('密码要6-12位');
+					    }else{
+					    	if(email == ""){
+						    	alert('邮箱不能为空');
+						    }else if(email != ""){
+						        var reg =  /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+						        if(!(reg.test(email))){
+						        	alert("邮箱格式不正确，请重新输入！");
+						        }else{
+							    	$.ajax({
+							        	type: "POST",//方法类型
+							        	async:false,
+							            url: "/graduation/user/regist" ,//url
+							            contentType:"application/json;charset=utf-8",
+							            data: idata,
+							            success: function (result) {
+							            	var json= JSON.stringify(result);//将服务器传递json对象转成json字符串
+							            	var obj = eval('(' + json + ')');//将json字符串转成json对象
+							            	if(obj.key == "success"){
+							            		if(obj.message == "注册成功"){
+							            			alert(obj.message);
+								            		location.href = "user-login.html"//需要跳转的地址
+								            	}
+								            	if(obj.message == "该用户名已被使用"){
+								            		alert(obj.message);
+								            		window.location.reload();
+								            	}
+								            	if(obj.message == "该邮箱名已被使用"){
+								            		alert(obj.message);
+								            		window.location.reload();
+								            	}
+							            	}
+							            },
+							            error : function(result) {
+							            	alert(JSON.stringify(result));
+							            }
+							        });
+							  		return false;
+							    };
+						    }
+					    }
+				    }
+				})
+			})
+		</script>
+		
+		<!--登录按钮-->
+		<script type="text/javascript">
+			$(document).ready(function () {
+				$('#lg_btn').click(function(){
+					location.href = "user-login.html"
+				})
+			});
+		</script>
+	</head>
+<body>
+	<script type="text/javascript" src="https://cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>
+	<div class="panel"> 
+  		<form class="form layui-form" id="rg_form" action="" method="post">
+		 	<div class="row layui-form-item">
+            	<label class="layui-form-label"><i class="layui-icon layui-icon-username" style="font-size: 30px; color: #1E9FFF;"></i></label>
+            	<div class="layui-input-block">
+                	<input type="text" name="userName" placeholder="用户名称" autocomplete="off" class="layui-input">
+           		</div>
+        	</div>
+            <div class="row  layui-form-item">
+                <label class="layui-form-label"><i class="layui-icon layui-icon-password" style="font-size: 30px; color: #1E9FFF;"></i></label>
+                <div class="layui-input-block">
+                    <input type="password" name="userPwd" placeholder="用户密码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="row  layui-form-item">
+                <label class="layui-form-label"><i class="layui-icon layui-icon-release" style="font-size: 30px; color: #1E9FFF;"></i></label>
+                <div class="layui-input-block">
+                    <input type="text" name="userEmail" placeholder="用户邮箱" autocomplete="off" class="layui-input">
+                </div>
+            </div>			            
+    	</form>
+    	<button class="layui-btn layui-btn-radius layui-btn-normal" id="lg_btn">登录</button>
+    	<button class="layui-btn layui-btn-radius layui-btn-normal" id="rg_btn">注册</button>
+  	</div> 
+</body>
+<script src="../../layui/layui.js" charset="utf-8"></script>
+</html>

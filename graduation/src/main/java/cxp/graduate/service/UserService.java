@@ -3,66 +3,69 @@ package cxp.graduate.service;
 import cxp.graduate.pojo.User;
 
 public interface UserService {
-	
+
 	/**
-	 * 
-	* @Title: findUserByName
-	* @Description: 根据用户名和密码查询用户是否能登录。
-	* @param：
-	* @return：User
-	* @throws：
-	 */
-	public User findUserByName(User user);
-	
-	/**
-	 * 
-	* @Title: findUserByName
-	* @Description: 
-	* @param：
-	* @return：
-	* @throws：
-	 */
-	public String findUserByName(String name);
-	
-	/**
-	 * 
 	* @Title: findUser
-	* @Description: 根据用户名查询用户
-	* @param：
-	* @return：
+	* @Description: 根据用户名和密码查询用户
+	* @param：User
+	* @return：findUser
 	* @throws：
 	 */
-	public User findUser(String name);
-	
+	User findUser(User user);
 	
 	/**
-	 * 
-	* @Title: findDeviceByID
-	* @Description: 查询用户是否激活
-	* @param：
-	* @return：
+	* @Title: findUserByName
+	* @Description: 注册时需要查询用户名是否被使用过
+	* @param：String
+	* @return：String
 	* @throws：
 	 */
-	public boolean findDeviceByID(int userID);
+	String findUserByName(String u_name);
 	
 	/**
-	 * 
 	* @Title: findUserEmail
-	* @Description: 查询是否存在邮箱
-	* @param：
-	* @return：
+	* @Description: 注册时需要查询用户邮箱是否被使用过
+	* @param：String
+	* @return：boolean
 	* @throws：
 	 */
-	public String findUserEmail(String emailName);
+	boolean findUserEmail(String u_email);
 	
 	/**
-	 * 
-	* @Title: getUserId
-	* @Description: 插入用户的同时返回当前用户id
-	* @param：
-	* @return：
+	* @Title: saveUser
+	* @Description: 保存用户名、密码和邮箱
+	* @param：User
+	* @return：void
 	* @throws：
 	 */
-	public int saveUser(User user);
+	void saveUser(User user);
+	
+	/**
+	* @Title: updateCode
+	* @Description: 更新用户邮箱状态
+	* @param：User
+	* @return：void
+	* @throws：
+	 */
+	void updateCode(User user);
+	
+	/**
+	* @Title: updateAct
+	* @Description: 激活用户设备状态
+	* @param：User
+	* @return：void
+	* @throws：
+	 */
+	void updateAct(User user);
+
+	/**
+	* @Title: findUserPwd
+	* @Description: 根据邮箱获取密码
+	* @param：String
+	* @return：String
+	* @throws：
+	 */
+	String findUserPwd(String email);
+	
 	
 }

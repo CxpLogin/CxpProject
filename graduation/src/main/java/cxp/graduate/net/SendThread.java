@@ -6,6 +6,11 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import cxp.graduate.pojo.ControlOrder;
+import cxp.graduate.service.DeviceService;
+import cxp.graduate.service.OrderService;
+import net.sf.json.JSONObject;
+
 /**
  * 
  * @ClassName:  SendThread   
@@ -29,13 +34,24 @@ public class SendThread implements Runnable{
 			while(true && (flag.getFlag())) {
 				PrintWriter pw = new PrintWriter(socket.getOutputStream(),true);
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(8000);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				pw.println("sss");
-				pw.flush();
+				OrderService os = SocketUtils.getBeanByName("orderService");
+				ControlOrder order = os.selectFlag(flag.getDeviceId());
+				//如果标志位发生改变发送指令
+				if(order.isC_flag()) {
+					JSONObject json = JSONObject.fromObject(order);
+					System.out.println(json.toString());
+					pw.println(json.toString());
+					pw.flush();
+					order.setC_flag(false);
+					os.updateOrder(order);
+				}else {
+					
+				}
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

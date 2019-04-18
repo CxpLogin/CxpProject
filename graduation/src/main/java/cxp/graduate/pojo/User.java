@@ -1,71 +1,66 @@
 package cxp.graduate.pojo;
 
 import java.io.Serializable;
-import java.util.List;
 
-public class User implements Serializable{
-	/**
-	 * @ClassName：User
-	 * @Description: 用户登录、注册的Bean
-	 * @date: 2019-03-07 v1.1
-	 */
-	private static final long serialVersionUID = 898474463888824242L;
-	
-	private int userID;
-	private String userName;
-	private String userPwd;
-	private String userEmail;
-	private String registTime;
-	private String code;//这是验证码的code
-	//一个用户具有多个设备，但一个设备仅有一个用户（一对多配置）
-	private List<Device> devices;
-	public int getUserID() {
-		return userID;
+/**
+ * @ClassName：User
+ * @Description: 用户
+ * @date:	
+ */
+public class User implements Serializable{	
+	private static final long serialVersionUID = 1L;
+	private int u_id;
+	private String u_name;
+	private String u_pwd;
+	private String u_email;
+	private String u_retime;
+	private String u_emailcode;
+	private boolean u_isact;
+	public int getU_id() {
+		return u_id;
 	}
-	public void setUserID(int userID) {
-		this.userID = userID;
+	public void setU_id(int u_id) {
+		this.u_id = u_id;
 	}
-	public String getUserName() {
-		return userName;
+	public String getU_name() {
+		return u_name;
 	}
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setU_name(String u_name) {
+		this.u_name = u_name;
 	}
-	public String getUserPwd() {
-		return userPwd;
+	public String getU_pwd() {
+		return u_pwd;
 	}
-	public void setUserPwd(String userPwd) {
-		this.userPwd = userPwd;
+	public void setU_pwd(String u_pwd) {
+		this.u_pwd = u_pwd;
 	}
-	public String getUserEmail() {
-		return userEmail;
+	public String getU_email() {
+		return u_email;
 	}
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
+	public void setU_email(String u_email) {
+		this.u_email = u_email;
 	}
-	public String getRegistTime() {
-		return registTime;
+	public String getU_retime() {
+		return u_retime;
 	}
-	public void setRegistTime(String registTime) {
-		this.registTime = registTime;
+	public void setU_retime(String u_retime) {
+		this.u_retime = u_retime;
 	}
-	public String getCode() {
-		return code;
+	public String getU_emailcode() {
+		return u_emailcode;
 	}
-	public void setCode(String code) {
-		this.code = code;
+	public void setU_emailcode(String u_emailcode) {
+		this.u_emailcode = u_emailcode;
 	}
-	public List<Device> getDevices() {
-		return devices;
+	public boolean isU_isact() {
+		return u_isact;
 	}
-	public void setDevices(List<Device> devices) {
-		this.devices = devices;
+	public void setU_isact(boolean u_isact) {
+		this.u_isact = u_isact;
 	}
 	@Override
 	public String toString() {
-		return "User [userID=" + userID + ", userName=" + userName + ", userPwd=" + userPwd + ", userEmail=" + userEmail
-				+ ", registTime=" + registTime + ", code=" + code + ", devices=" + devices + "]";
+		return "User [u_id=" + u_id + ", u_name=" + u_name + ", u_pwd=" + u_pwd + ", u_email=" + u_email + ", u_retime="
+				+ u_retime + ", u_emailcode=" + u_emailcode + ", u_isact=" + u_isact + "]";
 	}
-
-	
 }

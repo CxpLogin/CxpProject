@@ -32,7 +32,7 @@
 		        });	
 			});
 		</script>
-	
+		
 		<!-- 登录表单 -->
 		<script type="text/javascript">
 			$(document).ready(function () {	
@@ -52,25 +52,29 @@
 			            success: function (result) {
 			            	var json= JSON.stringify(result);//将服务器传递json对象转成json字符串
 			            	var obj = eval('(' + json + ')');//将json字符串转成json对象			    
-		                   	if(obj.key == "success"){
-		                   		if(obj.message == "用户名或密码输入正确"){
-		                   			alert(obj.message);
-		                   			window.location.href='/graduation/user-welcome.html';//需要跳转的地址
-		                   		}
+			            	if(obj.key == "success"){
 		                   		if(obj.message == "验证码错误"){
 		                   			alert(obj.message);
 		                   			var sr=document.getElementById('imgVerify')
 	                		        sr.src = "/graduation/user/getVerify?" + Math.random();
 		                   		}
+		                   		
 		                   		if(obj.message == "用户名或密码输入不正确"){
 		                   			alert(obj.message);
 		                   			window.location.reload();
 		                   		}
-		                   		if(obj.message == "设备未激活"){
-		                   			alert(obj.message);
+		                   		
+		                   		if(obj.message == "用户名或密码输入正确"){
+		                   			window.location.href='/graduation/user-welcome.html';//需要跳转的地址
+		                   		}
+		                   		
+		                   		if(obj.message == "请激活邮箱"){
 		                   			window.location.href="/graduation/html/user/email-activate.html";//邮箱激活网址
 		                   		}
 		                   		
+		                   		if(obj.message == "设备未激活"){
+		                   			window.location.href="/graduation/html/user/device-activate.html";//设备激活网址
+		                   		}
 		                   	}
 			            },
 			            error : function(result) {
@@ -81,7 +85,7 @@
 				})			
 			});
 		</script>
-	
+		
 		<!-- 验证码测试 -->
 		<script type="text/javascript">
 			$(document).ready(function () {
@@ -106,7 +110,7 @@
 		<script type="text/javascript">
 			$(document).ready(function () {
 				$('#rg_btn').click(function(){
-					location.href = "user-regist.html"
+					window.location.href='/graduation/html/user/user-regist.html';//需要跳转的地址
 				})
 			});
 		</script>
@@ -124,6 +128,15 @@
 			  });
 			});
 		</script>
+		
+		<!-- 忘记密码 -->
+		<script type="text/javascript">
+		  function forgetpwd() {
+				$(function(){
+					window.location.href="/graduation/html/user/user-forgetpwd.html";
+				});
+			}
+	 	 </script>
 	</head>
 <body>
 	<script type="text/javascript" src="https://cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>
@@ -156,7 +169,7 @@
 	        <div class="layui-form-item">
 	            <div style="text-align: right;">
 	                <div class="layui-input-inline">
-	                    <a href="###">
+	                    <a href="javascript:void(0);" onclick="forgetpwd()">
 	                        <i class="layui-icon layui-icon-help" style="color:white;background-color: black;border-radius: 50%;"></i> 忘记密码</a>
 	                </div>
 	            </div>
@@ -165,9 +178,7 @@
 		<button class="layui-btn layui-btn-radius layui-btn-normal" id="lg_btn">登录</button>
 		<button class="layui-btn layui-btn-radius layui-btn-normal" id="rg_btn">注册</button>
 		</div>
-		
 	</div>
-	
 </body>
 <script src="../../layui/layui.js" charset="utf-8"></script>
 </html>

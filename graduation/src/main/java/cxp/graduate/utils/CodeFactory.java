@@ -17,7 +17,7 @@ public class CodeFactory {
 	public void demo() {
 //		String code = getCode();
 //		String code = "123456";
-//		String str = encrypt(code);
+//		String str = encrypt("158130156136138152140150152140158140160130146136");
 //		System.out.println(code);
 //		System.out.println(str);
 //		System.out.println(authenticatePassword(str,code));

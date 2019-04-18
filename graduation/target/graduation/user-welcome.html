@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="css/reset.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="text/javascript" src="js/jquery-3.3.1.js" ></script>
+  <!-- 获取用户名 -->
+  <script type="text/javascript">
+	$(document).ready(function () {	
+		$.ajax({
+        	type: "POST",//方法类型
+        	async:false,
+            url: "/graduation/user/welcome" ,//url
+            contentType:"application/json;charset=utf-8",
+            success: function (result) {
+            	var json= JSON.stringify(result);//将服务器传递json对象转成json字符串
+            	var obj = eval('(' + json + ')');//将json字符串转成json对象
+               	if(obj.key == "success"){	                   		
+               	    var ob = document.getElementById("p");
+               	 	ob.innerHTML= "欢迎 " + obj.message + " 进入智能物联系统";
+               	}	            	
+            },
+            error : function(result) {
+            	alert("其他问题");
+            }
+        });	
+	});
+</script>
+</head>
+<body style="background-color: #01AAED;">
+<script type="text/javascript" src="https://cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>
+<p id="p" style="text-align: center;font-size: 60px;">欢迎xxx进入智能物联系统</p>
+<div class="wrapper">
+  <div class="swing">
+    <div class="human">
+      <div class="top-part">
+        <div class="head">
+          <div class="hair"></div>
+          <div class="fringe"></div>
+          <div class="eye"></div>
+          <div class="mouth"></div>
+        </div>
+        <div class="body">
+          <div class="hand">
+            <div class="hand-one"></div>
+            <div class="hand-two"></div>
+          </div>
+        </div>
+      </div>
+      <div class="leg-one"></div>
+      <div class="leg-two"></div>
+    </div>
+    <div class="swing-rod"></div>
+    <div class="bottom"></div>
+  </div>
+  <div class="pole one"></div>
+  <div class="pole two"></div>
+</div>
+</body>
+</html>

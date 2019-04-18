@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>设备信息</title>
+		<!--layui Start-->
+		<link rel="stylesheet" href="../../layui/css/layui.css">
+		<!-- layui End-->	
+		<script type="text/javascript" src="../../js/jquery-3.3.1.js" ></script>
+		<!-- 检测用户是否登录 -->
+		<script type="text/javascript">
+			$(document).ready(function () {	
+				$.ajax({
+		        	type: "POST",//方法类型
+		        	async:false,
+		            url: "/graduation/user/check" ,//url
+		            contentType:"application/json;charset=utf-8",
+		            success: function (result) {
+		            	var json= JSON.stringify(result);//将服务器传递json对象转成json字符串
+		            	var obj = eval('(' + json + ')');//将json字符串转成json对象
+	                   	if(obj.key == "success"){	                   		
+	                   		if(obj.message == "未登录"){
+	                   			window.location.href='/graduation/html/user/user-login.html';//需要跳转的地址
+                   			}	
+	                   	}	            	
+		            },
+		            error : function(result) {
+		            	alert("其他问题");
+		            }
+		        });	
+			});
+		</script>
+		
+		<style>
+		#circle {
+		    /*准备一个长200px 宽200px的div，背景设置成黄色*/
+		    width:980px;
+		    height: 400px;
+		    margin: auto;
+		    position: absolute;
+		    top: 0;
+		    bottom: 0;
+		    left: 0;
+		    right: 0;
+		    padding: 50px;
+			border-radius: 5px;
+			text-align: center;
+			background: rgba(255,255,255,.6); 
+			box-shadow: 1px 1px 100px rgba(255,255,255,1), inset  1px 1px 60px rgba(255,255,255,.4);
+		}
+		}
+		</style>
+	</head>
+<body style="background-color: #01AAED;">
+	<script type="text/javascript" src="https://cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>
+	<div id="circle">
+		<table class="layui-hide" id="test"></table>
+	</div>
+</body>
+<script src="../../layui/layui.js" charset="utf-8"></script>
+<script src="//res.layui.com/layui/dist/layui.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 --> 
+ 
+<script>
+layui.use('table', function(){
+  var table = layui.table;
+  
+  table.render({
+    elem: '#test'
+    ,url:'/graduation/user/device'
+    ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+    ,toolbar: true
+    ,cols: [[
+      {field:'uniqueID', title: '设备码', align: 'center'}
+      ,{field:'deviceAddr', title: '设备安放地址', align: 'center'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
+      ,{field:'activateTime', title: '设备激活时间', align: 'center'}
+      ,{field:'activate', title: '是否激活', align: 'center'}
+      ,{field:'MQ2Switch', title: '烟雾传感器状态', align: 'center'}
+      ,{field:'DHT11Switch', title: '温湿度传感器状态', align: 'center'} //单元格内容水平居中
+      ,{field:'FLAMESwitch', title: '火焰传感器状态', align: 'center'} //单元格内容水平居中
+    ]]
+  	,page: true
+  	,response: {
+      	statusCode: 200 //重新规定成功的状态码为 200，table 组件默认为 0
+    }
+  	,parseData: function(res){ //将原始数据解析成 table 组件所规定的数据
+  		return {
+  	        "code": res.status, //解析接口状态
+  	        "msg": res.message, //解析提示文本
+  	        "count": res.total, //解析数据长度
+  	        "data": res.rows.item //解析数据列表
+  	        
+  	      };
+    	    
+    }
+  });
+});
+</script>
+</html>

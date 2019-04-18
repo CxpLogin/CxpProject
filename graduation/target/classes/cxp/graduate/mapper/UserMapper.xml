@@ -3,48 +3,51 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cxp.graduate.mapper.UserMapper"> 
-   
    <!-- 根据用户名及密码查询用户 -->
    <resultMap type="User" id="userMap">
-   		<result property="userID" column="userID"/>
-   		<result property="userName" column="userName"/>
-   		<result property="userPwd"  column="userPwd"/>
-   	 	<result property="userEmail" column="userEmail"/>
-   	 	<result property="registTime" column="registTime"/>
+   		<result property="u_id" column="u_id"/>
+   		<result property="u_name" column="u_name"/>
+   		<result property="u_pwd"  column="u_pwd"/>
+   		<result property="u_email" column="u_email"/>
+   	 	<result property="u_retime" column="u_retime"/>
+   	 	<result property="u_emailcode" column="u_emailcode"/>
+   	 	<result property="u_isact" column="u_isact"/>
     </resultMap>
-   <select id="findUserByName" resultMap="userMap" parameterType="User">
-   	select * from user where userName=#{userName} and userPwd=#{userPwd}
-   </select>
-   
+   <select id="findUser" resultMap="userMap" parameterType="User">
+   		select * from user where u_name = #{u_name} and u_pwd = #{u_pwd}
+   </select> 
    
    <!-- 根据用户名查询用户 -->
-   <select id="selectUserByName" resultType="User" parameterType="String">
-   	select * from user where userName=#{userName}
+   <select id="findUserByName" resultType="User" parameterType="String">
+   		select * from user where u_name = #{u_name}
    </select>
    
-   <!-- 根据邮箱名查询是否存在该邮箱 -->
-   <resultMap type="String" id="existEmail">
-   	 	<result property="userEmail" column="userEmail"/>
-    </resultMap>
-   <select id="findUserEmail" resultMap="existEmail" parameterType="String">
-   	select * from user where userEmail=#{userEmail}
-   </select>
-   
-   <!-- 查询用户设备是否激活 -->
-   <resultMap type="User" id="deviceMap">
-		<result property="userID" column="userID"/>
-		<collection property="devices" javaType="ArrayList" ofType="Device" column="uid_did">
-			<id property="deviceID" column="deviceID"/>    
-            <result property="activate" column="isActivate"/>
-		</collection>
-	</resultMap>
-   <select id="findDeviceByID" resultMap="deviceMap" parameterType="int">
-   	select * from user u,device d where u.userID = d.deviceID and u.userID = #{userID};
+   <!-- 根据用户邮箱查询用户 -->
+   <select id="findUserEmail" resultMap="userMap" parameterType="String">
+   		select * from user where u_email = #{u_email}
    </select>
    
    <!-- 插入用户返回自增主键id -->
-   <insert id="insertUser" useGeneratedKeys="true" keyColumn="userID" keyProperty="userID" parameterType="User">
-   		insert into user(userName,userPwd,userEmail,registTime) value (#{userName},#{userPwd},#{userEmail},#{registTime});
+   <insert id="saveUser" parameterType="User"  useGeneratedKeys="true" keyProperty="u_id">
+   		insert into user (u_name,u_pwd,u_email) value (#{u_name},#{u_pwd},#{u_email})
 	</insert>
-   
+	
+	<!-- 更新邮箱状态  -->
+	<update id="updateCode" parameterType="User">
+   		update user set 
+   			u_retime = #{u_retime},
+   			u_emailcode = #{u_emailcode}
+   			where u_id = #{u_id} ;
+	</update>
+	
+	<!-- 更新设备状态 -->
+	<update id="updateAct" parameterType="User">
+   		update user set 
+   			u_isact = #{u_isact} where u_id = #{u_id} ;
+	</update>
+	
+	 <!-- 根据用户邮箱查询用户 -->
+   <select id="findUserPwd" resultType="String" parameterType="String">
+   		select u_pwd from user where u_email = #{u_email}
+   </select>
 </mapper>

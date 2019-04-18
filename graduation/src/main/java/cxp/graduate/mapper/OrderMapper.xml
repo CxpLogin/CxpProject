@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cxp.graduate.mapper.OrderMapper">  
+	<!-- 查询标志位的变化情况 -->
+	<resultMap type="ControlOrder" id="orderMap">
+   		<result property="c_relay" column="c_relay"/>
+   		<result property="c_alarm"  column="c_alarm"/>
+   	 	<result property="c_flag" column="c_flag"/>
+    </resultMap>
+	<select id="selectFlag" resultMap="orderMap" parameterType="int">
+   		select * from control_order where cid_did = #{cid_did};
+   </select>
+   
+   	<!-- 更新指令 -->
+   	<update id="updateOrder" parameterType="ControlOrder">
+   		update control_order set c_relay = #{c_relay},c_alarm = #{c_alarm},c_flag = #{c_flag} where cid_did = #{cid_did} 
+	</update>
+</mapper>

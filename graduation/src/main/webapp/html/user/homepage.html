@@ -34,7 +34,7 @@
 		
 		<script type="text/javascript">
 			var obj; 
-			var time=[],mq2=[],dht11=[],flame=[];
+			var time=[],yanwu=[],wendu=[],shidu=[];
 	 		$(document).ready(function () {	
 				$.ajax({
 		        	type: "POST",//方法类型
@@ -47,11 +47,10 @@
 		            	var dat = obj[0].intime.split(" ")[0];
 		            	for(var i=0;i < obj.length;i++){
 		            		time[i] = obj[i].intime.split(" ")[1].substring(0,5);
-		            		mq2[i] = obj[i].mq2;
-		            		dht11[i] = obj[i].dht11;
-		            		flame[i] = obj[i].flame;
+		            		yanwu[i] = obj[i].yanwu;
+		            		wendu[i] = obj[i].wendu;
+		            		shidu[i] = obj[i].shidu;
 		            	}	
-		            	
 		            	// 基于准备好的dom，初始化echarts实例
 						var MQ2 = echarts.init(document.getElementById('MQ2'));		
 				        // 指定图表的配置项和数据
@@ -78,7 +77,7 @@
 				            	type: 'line',
 				            	showSymbol: false,
 						        hoverAnimation: false,
-						        data: mq2
+						        data: yanwu
 				            }]
 				        };
 				        MQ2.setOption(option);
@@ -106,7 +105,7 @@
 					            	type: 'line',
 					            	showSymbol: false,
 							        hoverAnimation: false,
-							        data: dht11
+							        data: wendu
 					            }]
 					        };
 				        DHT11.setOption(option);
@@ -152,21 +151,21 @@
 				        	    ],
 					            series: [
 					            	{
-					                    name:'烟雾传感器',
+					                    name:'烟雾浓度',
 					                    type:'line',
 					                    stack: '总量',
 					                    areaStyle: {},
-					                    data: mq2
+					                    data: yanwu
 					                },
 					                {
-					                    name:'温湿度传感器',
+					                    name:'温度情况',
 					                    type:'line',
 					                    stack: '总量',
 					                    areaStyle: {},
-					                    data: dht11
+					                    data: wendu
 					                },
 					                {
-					                    name:'火焰传感器',
+					                    name:'湿度情况',
 					                    type:'line',
 					                    stack: '总量',
 					                    areaStyle: {},
@@ -177,7 +176,7 @@
 					                        }
 					                    },
 					                    areaStyle: {normal: {}},
-					                    data: flame
+					                    data: shidu
 					                },
 					            ]
 					        };

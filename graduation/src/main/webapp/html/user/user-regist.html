@@ -18,15 +18,14 @@
 						values[params[x].name] = params[x].value;
 					}
 					var idata = JSON.stringify(values);
-					alert(idata);
 					var obj = eval('(' + idata + ')');//将json字符串转成json对象
-					var pass = obj.userPwd;
-					var email = obj.userEmail;
-					if(!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(obj.userName)){
+					var pass = obj.u_pwd;
+					var email = obj.u_email;
+					if(!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(obj.u_name)){
 					      alert("用户名含有特殊字符");
-					}else if(/(^\_)|(\__)|(\_+$)/.test(obj.userName)){
+					}else if(/(^\_)|(\__)|(\_+$)/.test(obj.u_name)){
 						alert('用户名首尾不能出现下划线\'_\'');
-					}else if(/^\d+\d+\d$/.test(obj.userName)){
+					}else if(/^\d+\d+\d$/.test(obj.u_name)){
 				    	alert('用户名不能全为数字');
 				    }else{
 				    	if(pass.length < 6 && pass.length < 12){
@@ -92,19 +91,19 @@
 		 	<div class="row layui-form-item">
             	<label class="layui-form-label"><i class="layui-icon layui-icon-username" style="font-size: 30px; color: #1E9FFF;"></i></label>
             	<div class="layui-input-block">
-                	<input type="text" name="userName" placeholder="用户名称" autocomplete="off" class="layui-input">
+                	<input type="text" name="u_name" placeholder="用户名称" autocomplete="off" class="layui-input">
            		</div>
         	</div>
             <div class="row  layui-form-item">
                 <label class="layui-form-label"><i class="layui-icon layui-icon-password" style="font-size: 30px; color: #1E9FFF;"></i></label>
                 <div class="layui-input-block">
-                    <input type="password" name="userPwd" placeholder="用户密码" autocomplete="off" class="layui-input">
+                    <input type="password" name="u_pwd" placeholder="用户密码" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="row  layui-form-item">
                 <label class="layui-form-label"><i class="layui-icon layui-icon-release" style="font-size: 30px; color: #1E9FFF;"></i></label>
                 <div class="layui-input-block">
-                    <input type="text" name="userEmail" placeholder="用户邮箱" autocomplete="off" class="layui-input">
+                    <input type="text" name="u_email" placeholder="用户邮箱" autocomplete="off" class="layui-input">
                 </div>
             </div>			            
     	</form>

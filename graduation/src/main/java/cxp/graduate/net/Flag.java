@@ -8,14 +8,20 @@ package cxp.graduate.net;
  */
 public class Flag {
 	private Boolean flag;
-
+	private int deviceId;
 	public Boolean getFlag() {
 		return flag;
 	}
-
 	public void setFlag(Boolean flag) {
 		this.flag = flag;
 	}
+	public int getDeviceId() {
+		return deviceId;
+	}
+	public void setDeviceId(int deviceId) {
+		this.deviceId = deviceId;
+	}
+
 	
 	
 }

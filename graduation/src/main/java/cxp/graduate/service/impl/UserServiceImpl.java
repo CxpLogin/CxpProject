@@ -12,34 +12,27 @@ import net.sf.json.JSONObject;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {
-
+	
 	@Autowired
 	private UserMapper userMapper;
 	
 	UserResultUtils result = new UserResultUtils();
 	
 	@Override
-	public User findUserByName(User user) {
+	public User findUser(User user) {
 		// TODO Auto-generated method stub
-		//首先加密用户的密码
 		CodeFactory codeFactory = new CodeFactory();
-		System.out.println("用户提交密码" + user.getUserPwd());
-		String pwd = codeFactory.encrypt(user.getUserPwd());
+		System.out.println("用户提交密码" + user.getU_pwd());
+		String pwd = codeFactory.encrypt(user.getU_pwd());
 		System.out.println("加密后密码" + pwd);
-		user.setUserPwd(pwd);
-		return userMapper.findUserByName(user);
+		user.setU_pwd(pwd);
+		return userMapper.findUser(user);
 	}
 
 	@Override
-	public boolean findDeviceByID(int userID) {
+	public String findUserByName(String u_name) {
 		// TODO Auto-generated method stub
-		return userMapper.findDeviceByID(userID).getDevices().get(0).isActivate();
-	}
-
-	@Override
-	public String findUserByName(String name) {
-		// TODO Auto-generated method stub
-		User user = userMapper.selectUserByName(name);
+		User user = userMapper.findUserByName(u_name);
 		if(user == null) {
 			return result.NameExist;
 		}
@@ -47,26 +40,38 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public String findUserEmail(String emailName) {
+	public boolean findUserEmail(String u_email) {
 		// TODO Auto-generated method stub
-		return userMapper.findUserEmail(emailName);
-	}
-
-	@Override
-	public int saveUser(User user) {
-		// TODO Auto-generated method stub
-		//获取自增主键ID
-		if(userMapper.insertUser(user) >0) {
-			User getUser = userMapper.selectUserByName(user.getUserName());
-			return getUser.getUserID();
-		}else {
-			return 0;
+		User user = userMapper.findUserEmail(u_email);
+		if(user == null) {
+			return true;
 		}
+		return false;
 	}
 
 	@Override
-	public User findUser(String name) {
+	public void saveUser(User user) {
 		// TODO Auto-generated method stub
-		return userMapper.selectUserByName(name);
+		CodeFactory codeFactory = new CodeFactory();
+		user.setU_pwd(codeFactory.encrypt(user.getU_pwd()));
+		userMapper.saveUser(user);
+	}
+
+	@Override
+	public void updateCode(User user) {
+		// TODO Auto-generated method stub
+		userMapper.updateCode(user);
+	}
+
+	@Override
+	public void updateAct(User user) {
+		// TODO Auto-generated method stub
+		userMapper.updateAct(user);
+	}
+
+	@Override
+	public String findUserPwd(String email) {
+		// TODO Auto-generated method stub
+		return userMapper.findUserPwd(email);
 	}
 }
