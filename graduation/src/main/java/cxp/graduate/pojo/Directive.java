@@ -3,17 +3,18 @@ package cxp.graduate.pojo;
 import java.io.Serializable;
 
 /**
- * @ClassName：ControlOrder
- * @Description: 控制指令的bean
+ * @ClassName：Directive
+ * @Description: 匹配数据库的指令
  * @date:
  */
-public class ControlOrder implements Serializable{
+public class Directive implements Serializable{
 	
-	private static final long serialVersionUID = -4550358821935227472L;
+	private static final long serialVersionUID = 2014060440013301792L;
+
 	private boolean c_relay;
 	private boolean c_alarm;
 	private boolean c_flag;
-	private int cid_did;
+	private int did_oid;
 	public boolean isC_relay() {
 		return c_relay;
 	}
@@ -32,15 +33,16 @@ public class ControlOrder implements Serializable{
 	public void setC_flag(boolean c_flag) {
 		this.c_flag = c_flag;
 	}
-	public int getCid_did() {
-		return cid_did;
+	public int getDid_oid() {
+		return did_oid;
 	}
-	public void setCid_did(int cid_did) {
-		this.cid_did = cid_did;
+	public void setDid_oid(int did_oid) {
+		this.did_oid = did_oid;
 	}
 	@Override
 	public String toString() {
-		return "ControlOrder [c_relay=" + c_relay + ", c_alarm=" + c_alarm + ", c_flag=" + c_flag + ", cid_did="
-				+ cid_did + "]";
+		return "Directive [c_relay=" + c_relay + ", c_alarm=" + c_alarm + ", c_flag=" + c_flag + ", did_oid=" + did_oid
+				+ "]";
 	}
+	
 }

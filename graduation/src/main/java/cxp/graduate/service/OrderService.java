@@ -1,8 +1,6 @@
 package cxp.graduate.service;
 
-import cxp.graduate.pojo.ControlOrder;
-import cxp.graduate.pojo.Device;
-import cxp.graduate.pojo.Sensor;
+import cxp.graduate.pojo.Directive;
 
 /**
  * @ClassName：SensorService
@@ -11,23 +9,37 @@ import cxp.graduate.pojo.Sensor;
  */
 
 public interface OrderService {
-	
+
 	/**
-	* @Title: selectFlag
-	* @Description: 查询指令库
+	* @return 
+	 * @Title: findDirectiveFlag
+	* @Description: 查询指令库标志位是否发生变化
 	* @param：int
 	* @return：ControlOrder
 	* @throws：
 	 */
-	public ControlOrder selectFlag(int cid_did);
-	
+	public Directive findDirectiveFlag(int d_id);
+
 	/**
- 	* @Title: updateOrder
+ 	* @Title: updateDirectiveFlag
  	* @Description: 更新指令
- 	* @param：ControlOrder
+ 	* @param：Directive
  	* @return：void
  	* @throws：
  	 */
- 	public void updateOrder(ControlOrder order);
+	public void updateDirectiveFlag(Directive directive);
+	
+	/**
+ 	* @Title: updateDirectiveFlag
+ 	* @Description: 更新指令
+ 	* @param：Directive
+ 	* @return：void
+ 	* @throws：
+ 	 */
+	public void updataDirective(Directive directive);
+
+	public void updataDirectiveByRelay(Directive directive);
+
+	public void updataDirectiveByAlarm(Directive directive);	
 	
 }

@@ -1,13 +1,11 @@
 package cxp.graduate.pojo;
 
-import java.io.Serializable;
-
 /**
- * @ClassName：UpSensorData
- * @Description: JSON封装的传感器数据
- * @date:
+ * @ClassName：SensorData
+ * @Description: 封装硬件传递的JSON
+ * @date: 2019-04-18
  */
-public class UpSensorData implements Serializable{
+public class SensorData {
 	private static final long serialVersionUID = 1244166695900651732L;
 	private String identity;
 	private float yanwu;
@@ -60,7 +58,7 @@ public class UpSensorData implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "UpSensorData [identity=" + identity + ", yanwu=" + yanwu + ", wendu=" + wendu + ", shidu=" + shidu
+		return "SensorData [identity=" + identity + ", yanwu=" + yanwu + ", wendu=" + wendu + ", shidu=" + shidu
 				+ ", flame=" + flame + ", setaddr=" + setaddr + ", gpsaddr=" + gpsaddr + "]";
 	}
 	

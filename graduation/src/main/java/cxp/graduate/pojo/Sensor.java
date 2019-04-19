@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 /**
  * @ClassName：Sensor
- * @Description: 传感器数据
- * @date: 2019-04-16
+ * @Description: 匹配数据库传感器数据
+ * @date: 2019-04-18
  */
 public class Sensor implements Serializable{
 	private static final long serialVersionUID = 1244166695900651730L;
@@ -78,6 +78,4 @@ public class Sensor implements Serializable{
 				+ flame + ", setaddr=" + setaddr + ", gpsaddr=" + gpsaddr + ", intime=" + intime + ", did_sid="
 				+ did_sid + "]";
 	}
-	
-
 }

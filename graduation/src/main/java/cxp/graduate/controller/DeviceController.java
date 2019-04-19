@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cxp.graduate.pojo.Code;
 import cxp.graduate.pojo.Device;
-import cxp.graduate.pojo.Order;
+import cxp.graduate.pojo.Directive;
 import cxp.graduate.pojo.Rows;
 import cxp.graduate.pojo.User;
 import cxp.graduate.service.DeviceService;
+import cxp.graduate.service.OrderService;
 import cxp.graduate.service.UserService;
 import cxp.graduate.utils.JsonUtils;
 import cxp.graduate.utils.UserResultUtils;
@@ -39,6 +41,9 @@ public class DeviceController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private OrderService orderService;
+	
 	UserResultUtils result = new UserResultUtils();
 	
 	@RequestMapping(value="device",method=RequestMethod.POST,produces="application/json;charset=utf-8")
@@ -46,48 +51,33 @@ public class DeviceController {
 	public String device(@RequestBody Device d,HttpSession session) {
 		User user = (User) session.getAttribute("user");
 		//查询是否存在该设备
-		boolean exitCode = deviceService.findDefaultCode(d.getD_code());
-		if(!exitCode) {
+		String exitCode = deviceService.findDefaultCode(d.getD_code());
+		System.out.println(exitCode);
+		if(exitCode == null) {
 			result.setKey("success");
 			result.setMessage(result.UniCodeMsg1);
 			JSONObject json = JSONObject.fromObject(result);
 			return json.toString();
 		}
 		//查询设备是否被使用
-		if( deviceService.findDeviceCode(d.getD_code()) != null) {
+		if( deviceService.findDeviceByCode(d.getD_code()) != null) {
 			result.setKey("success");
 			result.setMessage(result.UniCodeMsg2);
 			JSONObject json = JSONObject.fromObject(result);
 			return json.toString();
 		}
 		//更新设备信息
+		//首先根据用户id将激活状态更新
 		Device device = new Device();
+		user.setU_isact(true);
+		userService.updateActDevice(user);
+		
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
 		String date = df.format(new Date());
 		device.setD_code(d.getD_code());
 		device.setD_activattime(date);
 		device.setUid_did(user.getU_id());
-		deviceService.saveDevice(device);
-			
-		user.setU_isact(true);
-		userService.updateAct(user);
-		
-		int d_id = deviceService.findDeviceId(d.getD_code());
-		System.out.println(d_id);
-		
-		//需同步更新code
-		Code code = new Code();
-		code.setCode(d.getD_code());
-		code.setD_id(d_id);
-		deviceService.updateCode(code);
-		
-		//需同步更新指令库
-		Order order = new Order();
-		order.setC_alarm(false);
-		order.setC_relay(false);
-		order.setC_flag(false);
-		order.setCid_did(d_id);
-		deviceService.saveOrder(order);
+		int did = deviceService.saveDevice(device);
 		
 		result.setKey("success");
 		result.setMessage(result.Activate);
@@ -115,6 +105,132 @@ public class DeviceController {
 		ju.setRows(rows);
 		JSONObject json = JSONObject.fromObject(ju);
 		return json.toString();
+	}
+	
+	@RequestMapping(value="Brelay",method=RequestMethod.POST,produces="application/json;charset=utf-8")
+	@ResponseBody
+	public String Brelay(HttpServletRequest request,HttpSession session) {
+		String relayValue = request.getParameter("relay");
+		int did_oid = (int) session.getAttribute("bedroomid");
+		if(relayValue.equals("ON")) {
+			Directive directive = new Directive();
+			directive.setC_relay(true);
+			directive.setC_flag(true);
+			directive.setDid_oid(did_oid);
+			orderService.updataDirectiveByRelay(directive);
+		}else if(relayValue.equals("OFF")) {
+			Directive directive = new Directive();
+			directive.setC_relay(false);
+			directive.setC_flag(true);
+			directive.setDid_oid(did_oid);
+			orderService.updataDirectiveByRelay(directive);
+		}
+		return null;		
+	}
+	
+	@RequestMapping(value="Balarm",method=RequestMethod.POST,produces="application/json;charset=utf-8")
+	@ResponseBody
+	public String Balarm(HttpServletRequest request,HttpSession session) {
+		String relayValue = request.getParameter("alarm");
+		int did_oid = (int) session.getAttribute("bedroomid");
+		if(relayValue.equals("ON")) {
+			Directive directive = new Directive();
+			directive.setC_alarm(true);
+			directive.setC_flag(true);
+			directive.setDid_oid(did_oid);
+			orderService.updataDirectiveByAlarm(directive);
+		}else if(relayValue.equals("OFF")) {
+			Directive directive = new Directive();
+			directive.setC_alarm(false);
+			directive.setC_flag(true);
+			directive.setDid_oid(did_oid);
+			orderService.updataDirectiveByAlarm(directive);
+		}
+		return null;		
+	}
+	
+	@RequestMapping(value="Krelay",method=RequestMethod.POST,produces="application/json;charset=utf-8")
+	@ResponseBody
+	public String Krelay(HttpServletRequest request,HttpSession session) {
+		String relayValue = request.getParameter("relay");
+		int did_oid = (int) session.getAttribute("kitchenid");
+		if(relayValue.equals("ON")) {
+			Directive directive = new Directive();
+			directive.setC_relay(true);
+			directive.setC_flag(true);
+			directive.setDid_oid(did_oid);
+			orderService.updataDirectiveByRelay(directive);
+		}else if(relayValue.equals("OFF")) {
+			Directive directive = new Directive();
+			directive.setC_relay(false);
+			directive.setC_flag(true);
+			directive.setDid_oid(did_oid);
+			orderService.updataDirectiveByRelay(directive);
+		}
+		return null;		
+	}
+	
+	@RequestMapping(value="Kalarm",method=RequestMethod.POST,produces="application/json;charset=utf-8")
+	@ResponseBody
+	public String Kalarm(HttpServletRequest request,HttpSession session) {
+		String relayValue = request.getParameter("alarm");
+		int did_oid = (int) session.getAttribute("kitchenid");
+		if(relayValue.equals("ON")) {
+			Directive directive = new Directive();
+			directive.setC_alarm(true);
+			directive.setC_flag(true);
+			directive.setDid_oid(did_oid);
+			orderService.updataDirectiveByAlarm(directive);
+		}else if(relayValue.equals("OFF")) {
+			Directive directive = new Directive();
+			directive.setC_alarm(false);
+			directive.setC_flag(true);
+			directive.setDid_oid(did_oid);
+			orderService.updataDirectiveByAlarm(directive);
+		}
+		return null;		
+	}
+	
+	@RequestMapping(value="Prelay",method=RequestMethod.POST,produces="application/json;charset=utf-8")
+	@ResponseBody
+	public String Prelay(HttpServletRequest request,HttpSession session) {
+		String relayValue = request.getParameter("relay");
+		int did_oid = (int) session.getAttribute("parlourid");
+		if(relayValue.equals("ON")) {
+			Directive directive = new Directive();
+			directive.setC_relay(true);
+			directive.setC_flag(true);
+			directive.setDid_oid(did_oid);
+			orderService.updataDirectiveByRelay(directive);
+		}else if(relayValue.equals("OFF")) {
+			Directive directive = new Directive();
+			directive.setC_relay(false);
+			directive.setC_flag(true);
+			directive.setDid_oid(did_oid);
+			orderService.updataDirectiveByRelay(directive);
+		}
+		return null;		
+	}
+	
+	@RequestMapping(value="Palarm",method=RequestMethod.POST,produces="application/json;charset=utf-8")
+	@ResponseBody
+	public String Palarm(HttpServletRequest request,HttpSession session) {
+		String relayValue = request.getParameter("alarm");
+		int did_oid = (int) session.getAttribute("parlourid");
+		if(relayValue.equals("ON")) {
+			Directive directive = new Directive();
+			directive.setC_alarm(true);
+			directive.setC_flag(true);
+			directive.setDid_oid(did_oid);
+			orderService.updataDirectiveByAlarm(directive);
+		}else if(relayValue.equals("OFF")) {
+			Directive directive = new Directive();
+			directive.setC_alarm(false);
+			directive.setC_flag(true);
+			directive.setDid_oid(did_oid);
+			orderService.updataDirectiveByAlarm(directive);
+		}
+		return null;		
 	}
 	
 }

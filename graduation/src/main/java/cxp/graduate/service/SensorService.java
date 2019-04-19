@@ -2,7 +2,6 @@ package cxp.graduate.service;
 
 import java.util.List;
 
-import cxp.graduate.pojo.Device;
 import cxp.graduate.pojo.Sensor;
 
 /**
@@ -12,7 +11,7 @@ import cxp.graduate.pojo.Sensor;
  */
 
 public interface SensorService {
-	
+
 	/**
 	* @Title: insertSensorData
 	* @Description: 向数据库插入传感器数据
@@ -21,7 +20,16 @@ public interface SensorService {
 	* @throws：
 	 */
 	public void insertSensorData(Sensor sensor);
-	
+
+	/**
+	* @Title: selectSensorSetAddr
+	* @Description: 获取传感器的地址
+	* @param：int
+	* @return：void
+	* @throws：
+	 */
+	public List<Sensor> selectSensorSetAddr(int did_sid);
+
 	/**
 	* @Title: selectSensorData
 	* @Description: selectSensorData
@@ -30,13 +38,5 @@ public interface SensorService {
 	* @throws：
 	 */
 	public String selectSensorData(int did_sid);
-
-	/**
-	* @Title: selectSensorSetAddr
-	* @Description: 根据设备id查询传感器数据
-	* @param：int
-	* @return：Sensor
-	* @throws：
-	 */
-	public List<Sensor> selectSensorSetAddr(int did_sid);
+	
 }

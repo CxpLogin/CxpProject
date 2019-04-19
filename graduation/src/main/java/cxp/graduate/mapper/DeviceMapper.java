@@ -4,82 +4,53 @@ import java.util.List;
 
 import cxp.graduate.pojo.Code;
 import cxp.graduate.pojo.Device;
-import cxp.graduate.pojo.Order;
 
-public interface DeviceMapper {	
-	
-	//思路：直接查询device_code是否存在出厂编码
+public interface DeviceMapper {
+
 	/**
 	* @Title: findDefaultCode
-	* @Description: 查询出厂码 
+	* @Description: 设备连接成功，根据设备码查询是否存在该用户
 	* @param：String
-	* @return：String
+	* @return：Device
 	* @throws：
 	 */
- 	public String findDefaultCode(String code);
- 	
- 	/**
- 	* @Title: findDevice
- 	* @Description: 根据出厂编码获取整个设备的信息
- 	* @param：String
- 	* @return：Device
- 	* @throws：
- 	 */
- 	public Device findDevice(String code);
- 	
- 	/**
-	* @Title: findDeviceId
-	* @Description: 根据出厂编码获取设备id
-	* @param：String
-	* @return：int 
-	* @throws：
-	 */
- 	public int findDeviceId(String code);
- 	
- 	/**
- 	* @Title: selectUserDevice
- 	* @Description: 根据用户的id查询当前设备
- 	* @param：
- 	* @return：
- 	* @throws：
- 	 */
- 	public List<Device> selectUserDevice(int uid_did);
- 	
- 	/**
- 	* @Title: findDeviceSetAddrNum
- 	* @Description: 查询用户安装位置的个数
- 	* @param：Device
- 	* @return：
- 	* @throws：
- 	 */
- 	public int findDeviceSetAddrNum(Device device);
+	public Device findDeviceByCode(String code);
 
- 	/**
-	* @Title: findDeviceCode
-	* @Description: 查询设备是否被使用
-	* @param：d_code
-	* @return：
+	/**
+	* @Title: findDeviceByUid
+	* @Description: 根据用户id查询所有设备
+	* @param：int
+	* @return：List<Device>
 	* @throws：
 	 */
-	public Device findDeviceCode(String d_code);
-	
+	public List<Device> findDeviceByUid(int u_id);
+
+	/**
+	* @Title: findDefaultCode
+	* @Description: 激活时查询设备号
+	* @param：String
+	* @return：boolean
+	* @throws：
+	 */
+	public String findDefaultCode(String code);
+
 	/**
 	* @Title: saveDevice
-	* @Description: 插入一条设备
-	* @param：Device
-	* @return：void
+	* @Description: 插入设备的同时返回当前设备id
+	* @param：User
+	* @return：int
 	* @throws：
 	 */
 	public int saveDevice(Device device);
 
 	/**
-	* @Title: findDeviceSetAddr
-	* @Description: 根据d_did查询那个客厅为空
-	* @param：int
+	* @Title: updateFactoryCode
+	* @Description: 更新出厂编码库
+	* @param：Code
 	* @return：void
 	* @throws：
 	 */
-	public String findDeviceSetAddr(int d_id);
+	public void updateFactoryCode(Code code);
 
 	/**
 	* @Title: updateSetAddr
@@ -97,27 +68,26 @@ public interface DeviceMapper {
 	* @return：int
 	* @throws：
 	 */
-	public int findParlourOn(Device device);
+	public Integer findParlourOn(Device device);
 
 	/**
 	 * 
 	* @Title: selectById
-	* @Description: 根据用户id查询设备
-	* @param：
+	* @Description: 设备合计
+	* @param：List<Device>
 	* @return：
 	* @throws：
 	 */
-	public List<Device> selectById(int uid_did);
-
+	public List<Device> selectById(int u_id);
+	
 	/**
-	* @Title: updateCode
-	* @Description:更新设备库
+	* @Title: findParlourOn
+	* @Description: 首先根据时间排序，且状态在线
 	* @param：int
-	* @return：void
+	* @return：int
 	* @throws：
 	 */
-	public void updateCode(Code code);
+	public Integer findBedRoomOn(Device device);
 
-	public void saveOrder(Order order);
-	
+	public Integer findKitchenOn(Device device);
 }

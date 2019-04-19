@@ -10,20 +10,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<!-- 插入一条数据的同时删除第一条数据 -->
    <!-- select * from sensor where did_sid = 1 order by intime;按时间升序 -->
-   <!-- select * from sensor s where did_sid = 1 order by intime limit 0,1;取时间排序后的第一个数据 -->
+   <!-- select * from sensor s where did_sid = 1 order by intime desc limit 0,1;取时间排序后的第一个数据 -->
    <!-- delete from sensor where intime = (select tmp.intime from (select * from sensor where did_sid = 1 order by intime limit 0,1) as tmp); -->
    <delete id="deleteFirstTime" parameterType="int">  
-        delete from sensor where intime = (select tmp.intime from (select * from sensor where did_sid = #{did_sid} order by intime limit 0,1) as tmp)
+        delete from sensor where intime = (select tmp.intime from (select * from sensor where did_sid = #{did_sid} order by intime desc limit 0,1) as tmp)
    </delete>
    <!-- 插入数据 -->
    <insert id="insertData" parameterType="Sensor">
    		insert into sensor (yanwu,wendu,shidu,flame,gpsaddr,setaddr,intime,did_sid) values (#{yanwu},#{wendu},#{shidu},#{flame},#{gpsaddr},#{setaddr},#{intime},#{did_sid})
    </insert>
-   
-   <!-- 插入数据 -->
-   <select id="selectByUidAndSetAddr" resultType="int" parameterType="Device">
-   		select d_id from device where uid_did = #{uid_did} and d_setaddr = #{d_setaddr} 
-   </select>
    
    <!-- 查询数据 -->
    <resultMap type="Sensor" id="sensorMap">

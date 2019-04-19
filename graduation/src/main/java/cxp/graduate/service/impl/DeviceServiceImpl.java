@@ -1,102 +1,72 @@
 package cxp.graduate.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cxp.graduate.mapper.DeviceMapper;
+import cxp.graduate.mapper.OrderMapper;
 import cxp.graduate.pojo.Code;
 import cxp.graduate.pojo.Device;
-import cxp.graduate.pojo.Devices;
-import cxp.graduate.pojo.Order;
+import cxp.graduate.pojo.Directive;
+import cxp.graduate.pojo.User;
 import cxp.graduate.service.DeviceService;
 
 /**
  * @ClassName：DeviceServiceImpl
  * @Description: 设备的Service实现
- * @date:
+ * @date: 2019-04-18
  */
 @Service("deviceService")
 public class DeviceServiceImpl implements DeviceService{
 
 	@Autowired
 	private DeviceMapper deviceMapper;
-	
+	@Autowired
+	private OrderMapper orderMapper;
+
 	@Override
-	public boolean findDefaultCode(String code) {
+	public Device findDeviceByCode(String code) {
 		// TODO Auto-generated method stub
-		if(deviceMapper.findDefaultCode(code) != null) {
-			return true;
-		}
-		return false;
+		return deviceMapper.findDeviceByCode(code);
 	}
 
 	@Override
-	public int findDeviceId(String code) {
+	public List<Device> findDeviceByUid(int u_id) {
 		// TODO Auto-generated method stub
-		if(deviceMapper.findDevice(code) != null) {
-			return deviceMapper.findDeviceId(code);
-		}
-		return 0;
+		return deviceMapper.findDeviceByUid(u_id);
 	}
 
 	@Override
-	public Devices selectUserDevice(int uid_did) {
-		// TODO Auto-generated method stub	 
-		List<Device> list = deviceMapper.selectUserDevice(uid_did);
-		//获取用户总设备数
-		int devicenum = list.size();
-		//各个位置安装数
-		Devices devices = new Devices();
-		int parlour = 0,bedroom = 0,kitchen = 0;
-		List parlourList = new ArrayList<>();
-		List bedroomList = new ArrayList<>();
-		List kitchenList = new ArrayList<>();
-		List deviceIdList = new ArrayList<>();
-		for(int i = 0;i < devicenum;i++) {
-			if(list.get(i).getD_setaddr() != null) {
-				if(list.get(i).getD_setaddr().equals("客厅")) {
-					parlour++;
-					parlourList.add(list.get(i).getD_id());
-				}else if(list.get(i).getD_setaddr().equals("卧室")) {
-					bedroom++;
-					bedroomList.add(list.get(i).getD_id());
-				}else if(list.get(i).getD_setaddr().equals("厨房")) {
-					kitchen++;
-					kitchenList.add(list.get(i).getD_id());
-				}
-			}	
-			deviceIdList.add(list.get(i).getD_id());
-		}
-		devices.setDevices(devicenum);
-		devices.setParlour(parlour);
-		devices.setBedroom(bedroom);
-		devices.setKitchen(kitchen);
-		devices.setParlourId(parlourList);
-		devices.setBedroomId(bedroomList);
-		devices.setKitchenId(kitchenList);
-		devices.setDeviceId(deviceIdList);
-		return devices;
-	}
-
-	@Override
-	public Device findDeviceCode(String d_code) {
+	public String findDefaultCode(String code) {
 		// TODO Auto-generated method stub
-		return deviceMapper.findDeviceCode(d_code);
+		return deviceMapper.findDefaultCode(code);
 	}
 
 	@Override
 	public int saveDevice(Device device) {
 		// TODO Auto-generated method stub
-		return deviceMapper.saveDevice(device);
-	}
-
-	@Override
-	public String findDeviceSetAddr(int d_id) {
-		// TODO Auto-generated method stub
-		return deviceMapper.findDeviceSetAddr(d_id);
+		//获取自增主键ID
+		if(deviceMapper.saveDevice(device) > 0) {
+			Device getDevice = deviceMapper.findDeviceByCode(device.getD_code());
+			//根据设备设置指令库
+			Directive directive = new Directive();
+			directive.setC_alarm(true);
+			directive.setC_relay(false);
+			directive.setC_flag(false);
+			directive.setDid_oid(getDevice.getD_id());
+			orderMapper.insertDirective(directive);
+			
+			//根据设备更新编码库
+			Code code = new Code();
+			code.setCode(device.getD_code());
+			code.setDid_cid(device.getD_id());
+			deviceMapper.updateFactoryCode(code);
+			return getDevice.getD_id();
+		}else {
+			return 0;
+		}
 	}
 
 	@Override
@@ -108,6 +78,9 @@ public class DeviceServiceImpl implements DeviceService{
 	@Override
 	public int findParlourOn(Device device) {
 		// TODO Auto-generated method stub
+		if(deviceMapper.findParlourOn(device) == null) {
+			return 0;
+		}
 		return deviceMapper.findParlourOn(device);
 	}
 
@@ -118,15 +91,21 @@ public class DeviceServiceImpl implements DeviceService{
 	}
 
 	@Override
-	public void updateCode(Code code) {
+	public int findBedRoomOn(Device device) {
 		// TODO Auto-generated method stub
-		deviceMapper.updateCode(code);
+		if(deviceMapper.findBedRoomOn(device) == null) {
+			return 0;
+		}
+		return deviceMapper.findBedRoomOn(device);
 	}
 
 	@Override
-	public void saveOrder(Order order) {
+	public int findKitchenOn(Device device) {
 		// TODO Auto-generated method stub
-		deviceMapper.saveOrder(order);
+		if(deviceMapper.findKitchenOn(device) == null) {
+			return 0;
+		}
+		return deviceMapper.findKitchenOn(device);
 	}
 	
 }

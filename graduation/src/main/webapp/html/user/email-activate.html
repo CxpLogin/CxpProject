@@ -29,7 +29,11 @@
 			            success: function (result) {
 			            	var json= JSON.stringify(result);//将服务器传递json对象转成json字符串
 			            	var obj = eval('(' + json + ')');//将json字符串转成json对象
-		                   		
+			            	if(obj.key == "success"){	                   		
+		                   		if(obj.message == "激活成功"){
+		                   			window.location.href='/graduation/html/user/device-active.html';//需要跳转的地址
+	                   			}	
+		                   	}	
 			            },
 			            error : function(result) {
 			            	alert("其他问题");

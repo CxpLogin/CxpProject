@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cxp.graduate.mapper.SensorMapper;
-import cxp.graduate.pojo.Device;
-import cxp.graduate.pojo.MapBean;
 import cxp.graduate.pojo.Sensor;
 import cxp.graduate.service.SensorService;
 import net.sf.json.JSONArray;
@@ -31,19 +29,17 @@ public class SensorServiceImpl implements SensorService {
 	}
 
 	@Override
-	public String selectSensorData(int did_sid) {
-		// TODO Auto-generated method stub
-		//获取设备的id
-		List<Sensor> list = sensorMapper.selectByDid(did_sid);
-		JSONArray jsonArray = JSONArray.fromObject(list);
-		return jsonArray.toString();
-	}
-
-	@Override
 	public List<Sensor> selectSensorSetAddr(int did_sid) {
 		// TODO Auto-generated method stub
 		return sensorMapper.selectSensorSetAddr(did_sid);
 	}
 
+	@Override
+	public String selectSensorData(int did_sid) {
+		// TODO Auto-generated method stub
+		List<Sensor> list = sensorMapper.selectByDid(did_sid);
+		JSONArray jsonArray = JSONArray.fromObject(list);
+		return jsonArray.toString();
+	}
 	
 }

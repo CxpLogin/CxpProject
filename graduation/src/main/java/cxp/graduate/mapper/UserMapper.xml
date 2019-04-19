@@ -12,36 +12,42 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
    	 	<result property="u_retime" column="u_retime"/>
    	 	<result property="u_emailcode" column="u_emailcode"/>
    	 	<result property="u_isact" column="u_isact"/>
+   	 	<collection property="devices" ofType="Device">
+			<id column="d_id" property="d_id"/>
+			<result property="d_code" column="d_code"/>
+	   		<result property="d_physics" column="d_physics"/>
+	   	 	<result property="d_instaladdr" column="d_instaladdr"/>
+	   	 	<result property="d_setaddr" column="d_setaddr"/>
+	   		<result property="d_activattime" column="d_activattime"/>
+	   		<result property="d_state" column="d_state"/>
+		</collection>
     </resultMap>
    <select id="findUser" resultMap="userMap" parameterType="User">
    		select * from user where u_name = #{u_name} and u_pwd = #{u_pwd}
    </select> 
    
    <!-- 根据用户名查询用户 -->
-   <select id="findUserByName" resultType="User" parameterType="String">
+   <select id="findUserByName" resultMap="userMap" parameterType="String">
    		select * from user where u_name = #{u_name}
    </select>
    
    <!-- 根据用户邮箱查询用户 -->
-   <select id="findUserEmail" resultMap="userMap" parameterType="String">
+   <select id="findUserByEmainl" resultMap="userMap" parameterType="String">
    		select * from user where u_email = #{u_email}
    </select>
    
    <!-- 插入用户返回自增主键id -->
    <insert id="saveUser" parameterType="User"  useGeneratedKeys="true" keyProperty="u_id">
-   		insert into user (u_name,u_pwd,u_email) value (#{u_name},#{u_pwd},#{u_email})
+   		insert into user (u_name,u_pwd,u_email,u_retime) value (#{u_name},#{u_pwd},#{u_email},#{u_retime})
 	</insert>
 	
 	<!-- 更新邮箱状态  -->
-	<update id="updateCode" parameterType="User">
-   		update user set 
-   			u_retime = #{u_retime},
-   			u_emailcode = #{u_emailcode}
-   			where u_id = #{u_id} ;
+	<update id="updateEmailCode" parameterType="User">
+   		update user set u_emailcode = #{u_emailcode} where u_id = #{u_id} ;
 	</update>
 	
 	<!-- 更新设备状态 -->
-	<update id="updateAct" parameterType="User">
+	<update id="updateActDevice" parameterType="User">
    		update user set 
    			u_isact = #{u_isact} where u_id = #{u_id} ;
 	</update>

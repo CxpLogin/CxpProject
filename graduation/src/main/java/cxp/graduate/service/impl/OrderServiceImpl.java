@@ -6,29 +6,43 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cxp.graduate.mapper.OrderMapper;
-import cxp.graduate.pojo.ControlOrder;
-
+import cxp.graduate.pojo.Directive;
 import cxp.graduate.service.OrderService;
-
-
 
 @Service("orderService")
 public class OrderServiceImpl implements OrderService {
 
 	@Autowired
-	private OrderMapper ooderMapper;
+	private OrderMapper oderMapper;
 	
 	@Override
-	public ControlOrder selectFlag(int cid_did) {
+	public Directive findDirectiveFlag(int d_id) {
 		// TODO Auto-generated method stub
-		return ooderMapper.selectFlag(cid_did);
+		return oderMapper.findDirectiveFlag(d_id);
 	}
 
 	@Override
-	public void updateOrder(ControlOrder order) {
+	public void updateDirectiveFlag(Directive directive) {
 		// TODO Auto-generated method stub
-		ooderMapper.updateOrder(order);
+		oderMapper.updateDirectiveFlag(directive);
 	}
 
+	@Override
+	public void updataDirective(Directive directive) {
+		// TODO Auto-generated method stub
+		oderMapper.updataDirective(directive);
+	}
+
+	@Override
+	public void updataDirectiveByRelay(Directive directive) {
+		// TODO Auto-generated method stub
+		oderMapper.updataDirectiveByRelay(directive);
+	}
+
+	@Override
+	public void updataDirectiveByAlarm(Directive directive) {
+		// TODO Auto-generated method stub
+		oderMapper.updataDirectiveByAlarm(directive);
+	}
 	
 }

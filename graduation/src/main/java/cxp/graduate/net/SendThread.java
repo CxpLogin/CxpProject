@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import cxp.graduate.pojo.ControlOrder;
+import cxp.graduate.pojo.Directive;
 import cxp.graduate.service.DeviceService;
 import cxp.graduate.service.OrderService;
 import net.sf.json.JSONObject;
@@ -40,17 +40,14 @@ public class SendThread implements Runnable{
 					e.printStackTrace();
 				}
 				OrderService os = SocketUtils.getBeanByName("orderService");
-				ControlOrder order = os.selectFlag(flag.getDeviceId());
-				//如果标志位发生改变发送指令
-				if(order.isC_flag()) {
-					JSONObject json = JSONObject.fromObject(order);
+				Directive directive = os.findDirectiveFlag(flag.getDeviceId());
+				if(directive.isC_flag()) {
+					JSONObject json = JSONObject.fromObject(directive);
 					System.out.println(json.toString());
 					pw.println(json.toString());
 					pw.flush();
-					order.setC_flag(false);
-					os.updateOrder(order);
-				}else {
-					
+					directive.setC_flag(false);
+					os.updateDirectiveFlag(directive);
 				}
 			}
 		} catch (IOException e) {

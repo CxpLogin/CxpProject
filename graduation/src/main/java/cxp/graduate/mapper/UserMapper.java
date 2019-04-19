@@ -9,10 +9,10 @@ public interface UserMapper {
 	
 	/**
 	 * 
-	* @Title: findUserByName
-	* @Description: 查询是否存在用户
-	* @param：
-	* @return：
+	* @Title: findUser
+	* @Description: 根据用户名和密码查询是否存在用户
+	* @param：User
+	* @return：User
 	* @throws：
 	 */
 	public User findUser(User user);
@@ -33,7 +33,8 @@ public interface UserMapper {
 	* @return：User
 	* @throws：
 	 */
-	public User findUserEmail(String u_email);
+	public User findUserByEmainl(String u_email);	
+
 
 	/**
 	* @Title: saveUser
@@ -69,5 +70,24 @@ public interface UserMapper {
 	* @return：String
 	* @throws：
 	 */
-	public String findUserPwd(String email);	
+	public String findUserPwd(String email);
+	
+	/**
+	* @Title: updateActDevice
+	* @Description: 激活用户设备状态
+	* @param：User
+	* @return：void
+	* @throws：
+	 */
+	public void updateActDevice(User user);
+
+	/**
+	* @Title: updateCode
+	* @Description: 更新用户邮箱状态
+	* @param：User
+	* @return：void
+	* @throws：
+	 */
+	public void updateEmailCode(User user);
+	
 }

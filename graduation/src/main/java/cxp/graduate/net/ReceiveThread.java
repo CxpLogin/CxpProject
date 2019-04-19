@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import cxp.graduate.pojo.Sensor;
-import cxp.graduate.pojo.UpSensorData;
+import cxp.graduate.pojo.SensorData;
 import cxp.graduate.service.DeviceService;
 import cxp.graduate.service.SensorService;
 import net.sf.json.JSONObject;
@@ -41,14 +41,9 @@ public class ReceiveThread implements Runnable{
 					String getClient = br.readLine();
 					//建立连接后，解析json
 					JSONObject object = (JSONObject) JSONObject.fromObject(getClient);
-					
-					//首先获取设备的id
-					DeviceService ds = SocketUtils.getBeanByName("deviceService");
-					String str = (String) object.get("identity");
-					System.out.println(str);
-					
+									
 					//获取烟雾传感器、温度传感器、湿度传感器、火焰报警器、GPS地址、安装位置
-					UpSensorData data = (UpSensorData) JSONObject.toBean(object,UpSensorData.class);
+					SensorData data= (SensorData) JSONObject.toBean(object,SensorData.class);
 					System.out.println(data);
 					
 					Sensor sensor = new Sensor();

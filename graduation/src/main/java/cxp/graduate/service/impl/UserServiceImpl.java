@@ -15,9 +15,31 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private UserMapper userMapper;
-	
-	UserResultUtils result = new UserResultUtils();
-	
+
+	@Override
+	public User findUserByName(String u_name) {
+		// TODO Auto-generated method stub
+		return userMapper.findUserByName(u_name);
+	}
+
+	@Override
+	public User findUserByEmainl(String u_email) {
+		// TODO Auto-generated method stub
+		return userMapper.findUserByEmainl(u_email);
+	}
+
+	@Override
+	public int saveUser(User user) {
+		// TODO Auto-generated method stub
+		//获取自增主键ID
+		if(userMapper.saveUser(user) > 0) {
+			User getUser = userMapper.findUserByName(user.getU_name());
+			return getUser.getU_id();
+		}else {
+			return 0;
+		}
+	}
+
 	@Override
 	public User findUser(User user) {
 		// TODO Auto-generated method stub
@@ -30,48 +52,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public String findUserByName(String u_name) {
+	public void updateActDevice(User user) {
 		// TODO Auto-generated method stub
-		User user = userMapper.findUserByName(u_name);
-		if(user == null) {
-			return result.NameExist;
-		}
-		return result.NameExisted;
+		userMapper.updateActDevice(user);
 	}
 
 	@Override
-	public boolean findUserEmail(String u_email) {
+	public void updateEmailCode(User user) {
 		// TODO Auto-generated method stub
-		User user = userMapper.findUserEmail(u_email);
-		if(user == null) {
-			return true;
-		}
-		return false;
+		userMapper.updateEmailCode(user);
 	}
-
-	@Override
-	public void saveUser(User user) {
-		// TODO Auto-generated method stub
-		CodeFactory codeFactory = new CodeFactory();
-		user.setU_pwd(codeFactory.encrypt(user.getU_pwd()));
-		userMapper.saveUser(user);
-	}
-
-	@Override
-	public void updateCode(User user) {
-		// TODO Auto-generated method stub
-		userMapper.updateCode(user);
-	}
-
-	@Override
-	public void updateAct(User user) {
-		// TODO Auto-generated method stub
-		userMapper.updateAct(user);
-	}
-
-	@Override
-	public String findUserPwd(String email) {
-		// TODO Auto-generated method stub
-		return userMapper.findUserPwd(email);
-	}
+	
 }

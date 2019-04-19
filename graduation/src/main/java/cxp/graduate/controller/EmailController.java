@@ -58,7 +58,7 @@ public class EmailController {
 		User user = (User) session.getAttribute("user");
 		user.setU_retime(date);
 		user.setU_emailcode(emailcode);
-		userService.updateCode(user);
+		userService.updateEmailCode(user);
 		result.setKey("success");
 		result.setMessage(result.Activate);
 		JSONObject json = JSONObject.fromObject(result);

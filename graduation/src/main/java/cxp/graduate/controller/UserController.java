@@ -149,15 +149,15 @@ public class UserController {
 	@ResponseBody
 	public String regist(@RequestBody User u) {
 		//1、首先判断用户名和邮箱是否被使用过
-		String existUser = userService.findUserByName(u.getU_name());
-		if( existUser.equals(result.NameExisted)) {
+		User existUser = userService.findUserByName(u.getU_name());
+		if( existUser != null) {
 			result.setKey("success");
 			result.setMessage(result.NameExisted);
 			JSONObject json = JSONObject.fromObject(result);
 			return json.toString();
 		}
 		//2、判断邮箱是否存在
-		if(!(userService.findUserEmail(u.getU_email()))) {
+		if(userService.findUserByEmainl(u.getU_email()) != null) {
 			result.setKey("success");
 			result.setMessage(result.EmailExist);
 			JSONObject json = JSONObject.fromObject(result);
@@ -165,10 +165,13 @@ public class UserController {
 		}
 		//3、填入用户名、密码和邮箱
 		CodeFactory codeFactory = new CodeFactory();//加密密码
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+		String date = df.format(new Date());
 		User user = new User();
 		user.setU_name(u.getU_name());
 		user.setU_pwd(codeFactory.encrypt(u.getU_pwd()));
 		user.setU_email(u.getU_email());
+		user.setU_retime(date);
 		userService.saveUser(user);
 		
 		result.setKey("success");
@@ -190,7 +193,7 @@ public class UserController {
 	public String forgetpwd(HttpServletRequest request) {
 		EmailValidateCode evc = new EmailValidateCode();
 		String email = request.getParameter("email");
-		evc.sendEmail(email, userService.findUserPwd(email));	
+		evc.sendEmail(email, userService.findUserByEmainl(email).getU_email());	
 		result.setKey("success");
 		result.setMessage(result.SendEmail);
 		JSONObject json = JSONObject.fromObject(result);
@@ -221,6 +224,18 @@ public class UserController {
 	@RequestMapping(value="welcome",method=RequestMethod.POST,produces="application/json;charset=utf-8")
 	@ResponseBody
 	public String welcome(HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		result.setKey("success");
+		result.setMessage(user.getU_name());
+		System.out.println(user.getU_name());
+		JSONObject json = JSONObject.fromObject(result);
+		return json.toString();
+	}
+	
+	//显示用户名
+	@RequestMapping(value="map",method=RequestMethod.POST,produces="application/json;charset=utf-8")
+	@ResponseBody
+	public String map(HttpSession session) {
 		User user = (User) session.getAttribute("user");
 		result.setKey("success");
 		result.setMessage(user.getU_name());

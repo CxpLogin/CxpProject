@@ -9,6 +9,7 @@ import java.net.Socket;
 
 import javax.servlet.ServletContext;
 import net.sf.json.JSONObject;
+import cxp.graduate.pojo.Device;
 import cxp.graduate.service.DeviceService;;
 	
 public class SocketThread implements Runnable{
@@ -46,6 +47,7 @@ public class SocketThread implements Runnable{
 		while(true) {
 			try {
 				Socket socket = server.accept();
+				System.out.println(socket);
 				//3、建立连接后获取唯一验证id之后才开启线程
 				BufferedReader br=new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				if(br.readLine() != null ) {
@@ -53,40 +55,28 @@ public class SocketThread implements Runnable{
 					//建立连接后，解析json
 					JSONObject object = (JSONObject) JSONObject.fromObject(getClient);	
 
-					/*查询数据库的唯一设备码*/
+					/*查询数据库中的device*/
 					DeviceService ds = SocketUtils.getBeanByName("deviceService");
-					String str = (String) object.get("identity");
-					System.out.println(str);
-					boolean exitCode = ds.findDefaultCode(str);
-					int deviceId = ds.findDeviceId(str);
-					System.out.println(deviceId);
-					
-					if(exitCode) {
-						if(deviceId == 0) {
-							PrintWriter pw=new PrintWriter(socket.getOutputStream(),true);
-							pw.println("your device not activated");
-							pw.flush();
-							continue;//假如没有输入正确，则回到socket处继续阻塞等待下一个连接
-						}else {
-							System.out.println("执行接收线程");
-							/*假如id验证正确执行接收信息的线程*/
-							Flag flag = new Flag();
-							flag.setFlag(true);//一开始设定为true
-							flag.setDeviceId(deviceId);
-							ReceiveThread receive = new ReceiveThread(socket,flag);
-							SendThread send = new SendThread(socket,flag);
-							Thread te = new Thread(receive);
-							Thread ts = new Thread(send);
-							te.start();
-							ts.start();
-						}
-					}else {
+					String code = (String) object.get("identity");
+					Device device = ds.findDeviceByCode(code);
+					if(device==null) {
 						PrintWriter pw=new PrintWriter(socket.getOutputStream(),true);
-						pw.println("please set right identity");
+						pw.println("your device not activated");
 						pw.flush();
 						continue;//假如没有输入正确，则回到socket处继续阻塞等待下一个连接
-					}
-					
+					}else {
+						System.out.println("执行接收线程");
+						/*假如id验证正确执行接收信息的线程*/
+						Flag flag = new Flag();
+						flag.setFlag(true);//一开始设定为true
+						flag.setDeviceId(device.getD_id());
+						ReceiveThread receive = new ReceiveThread(socket,flag);
+						SendThread send = new SendThread(socket,flag);
+						Thread te = new Thread(receive);
+						Thread ts = new Thread(send);
+						te.start();
+						ts.start();
+					}				
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

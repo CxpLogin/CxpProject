@@ -3,7 +3,6 @@ package cxp.graduate.mapper;
 import java.util.List;
 
 import cxp.graduate.pojo.Device;
-import cxp.graduate.pojo.MapBean;
 import cxp.graduate.pojo.Sensor;
 
 public interface SensorMapper {	
@@ -34,24 +33,6 @@ public interface SensorMapper {
 	* @throws：
 	 */
 	public void insertData(Sensor sensor);
-	
-	/**
-	* @Title: selectByUidAndSetAddr
-	* @Description: 根据用户id及安装位置获取设备id
-	* @param：
-	* @return：
-	* @throws：
-	 */
-	public int selectByUidAndSetAddr(Device device);
-	
-	/**
-	* @Title: selectByDid
-	* @Description: 根据设备的id查询传感器数据
-	* @param：
-	* @return：
-	* @throws：
-	 */
-	public List<Sensor> selectByDid(int did_sid);
 
 	/**
 	* @Title: findSensorSetAddr
@@ -61,5 +42,14 @@ public interface SensorMapper {
 	* @throws：
 	 */
 	public List<Sensor> selectSensorSetAddr(int did_sid);
+
+	/**
+	* @Title: selectByDid
+	* @Description: 根据设备的id查询传感器数据
+	* @param：int
+	* @return：List<Sensor>
+	* @throws：
+	 */
+	public List<Sensor> selectByDid(int did_sid);
 	
 }

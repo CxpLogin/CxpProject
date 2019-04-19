@@ -1,22 +1,25 @@
 package cxp.graduate.pojo;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
- * @ClassName：device
- * @Description: 设备表
- * @date:
+ * @ClassName：Device
+ * @Description: 匹配数据库设备信息
+ * @date: 2019-04-18
  */
 public class Device implements Serializable{
-	private static final long serialVersionUID = 1152194497771486295L;
-	private int d_id;//设备自增id
-	private String d_code;//设备出厂编码
-	private String d_physics;//设备经纬度
-	private String d_instaladdr;//设备安装地址
-	private String d_setaddr;//设备设置安装地址
-	private String d_activattime;//设备激活时间
-	private boolean d_state;//设备当前状态
+
+	private static final long serialVersionUID = -8208979960106176758L;
+	private int d_id;				//设备自增id
+	private String d_code;			//设备出厂编码
+	private String d_physics;		//设备经纬度
+	private String d_instaladdr;	//设备安装地址
+	private String d_setaddr;		//设备设置安装地址
+	private String d_activattime;	//设备激活时间
+	private boolean d_state;		//设备当前状态
 	private int uid_did;
+	private List<Sensor> sensors;
 	public int getD_id() {
 		return d_id;
 	}
@@ -65,11 +68,17 @@ public class Device implements Serializable{
 	public void setUid_did(int uid_did) {
 		this.uid_did = uid_did;
 	}
+	public List<Sensor> getSensors() {
+		return sensors;
+	}
+	public void setSensors(List<Sensor> sensors) {
+		this.sensors = sensors;
+	}
 	@Override
 	public String toString() {
 		return "Device [d_id=" + d_id + ", d_code=" + d_code + ", d_physics=" + d_physics + ", d_instaladdr="
 				+ d_instaladdr + ", d_setaddr=" + d_setaddr + ", d_activattime=" + d_activattime + ", d_state="
-				+ d_state + ", uid_did=" + uid_did + "]";
+				+ d_state + ", uid_did=" + uid_did + ", sensors=" + sensors + "]";
 	}
-	
+
 }
