@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>历史传感器数据</title>
+	<meta name="renderer" content="webkit">
+  	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<link rel="stylesheet" href="../../layui/css/layui.css"  media="all">
+  	<script type="text/javascript" src="../../js/jquery-3.3.1.js" ></script>
+  	
+</head>
+<body>
+	<script type="text/javascript" src="https://cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>	
+	<div class="layui-container">
+		<div class="layui-row">
+			<div class="layui-col-xs12">
+				<form class="layui-form" action="">
+					<div class="layui-form-item">
+					    <div class="layui-input-block">
+					    	<div class="layui-inline">
+						    	<label class="layui-form-label">设备ID</label>
+						      	<div class="layui-input-inline">
+							        <select id="deviceId" name="deviceId">
+							        	<option value=""></option>
+							        </select>
+						      	</div>
+						    </div>
+						    <div class="layui-inline">
+						    	<label class="layui-form-label">选择时间</label>
+						      	<div class="layui-input-inline">
+							    	<input type="text" name="date" id="date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+						      	</div>
+						    </div>						    
+					    </div>
+			  		</div>
+				</form>				
+			</div>
+		</div>
+		<div class="layui-row">
+	  		<div class="layui-col-xs12">
+					 <div class="layui-inline">
+				    	<button class="layui-btn" lay-submit="" id="bt_search" lay-filter="demo">立即提交</button>
+				    </div>
+		    </div>	
+	  	</div>
+		<div class="layui-row">
+	  		<div class="layui-col-xs12">
+					<table class="layui-hide" id="sensordata"></table> 
+					<div id="page" style="text-align: center;"></div>
+		    </div>	
+	  	</div>
+	</div>
+<script src="../../layui/layui.js" charset="utf-8"></script>
+<script>
+	layui.use(['form', 'table', 'laydate'], function(){
+		var form = layui.form
+  		,layer = layui.layer
+  		,table = layui.table
+  		,laydate = layui.laydate;
+  		
+  		//动态加载下拉框
+  		$.ajax({
+  			type:"POST",
+  			contentType:"application/json;charset=utf-8",
+  			url:"/graduation/user/devices",
+  			async:true,
+  			dataType:"json",
+  			success:function(result){
+  				var json= JSON.stringify(result);//将服务器传递json对象转成json字符串
+		        var obj = eval('(' + json + ')');//将json字符串转成json对象		        
+		        $.each(obj, function(index) {
+		        	var val = obj[index];
+		        	$('#deviceId').append("<option value="+val+">"+val+"</option>");
+		        });		        
+		        form.render('select');		      
+  			},
+  			error:function(result){
+  				alert("加载失败");
+  			}
+  		});
+  		
+  		laydate.render({
+		    elem: '#date'
+		    ,value: new Date()
+    		,isInitValue: true
+		});
+		 
+		$('#bt_search').click(function(){
+			var d_id = $('#deviceId option:selected').val();
+			var indate = $(" #date ").val();
+			if(d_id != "" && indate != ""){
+				table.render({
+			    	elem: '#sensordata'
+			    	,url:'/graduation/user/sensordata?d_id=' +  d_id + '&indate=' + indate
+			    	,page: true   
+				    ,cols: [[
+				      	{field:'did_sid', title: '设备id', align: 'center'}
+	      				,{field:'yanwu', title: '烟雾浓度', align: 'center'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
+				  	    ,{field:'wendu', title: '温度', align: 'center'}
+				      	,{field:'shidu', title: '湿度', align: 'center'}
+				      	,{field:'flame', title: '火焰探测', align: 'center'}
+				      	,{field:'gpsaddr', title: '经纬度', align: 'center'}
+				      	,{field:'setaddr', title: '安装位置', align: 'center'}
+				      	,{field:'intime', title: '保存时间', align: 'center'}
+				    ]]
+			    	,response: {
+				      	statusCode: 200 //重新规定成功的状态码为 200，table 组件默认为 0
+				    }
+				  	,parseData: function(res){ //将原始数据解析成 table 组件所规定的数据					  		
+				  		return {
+				  	        "code": res.status, //解析接口状态
+				  	        "msg": res.message, //解析提示文本
+				  	        "count": res.total, //解析数据长度
+				  	        "data": res.rows.sensor //解析数据列表
+				  	      };
+				    	    
+				    }
+				});
+			}	
+		});
+  });
+</script>
+</body>
+</html>

@@ -17,14 +17,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cxp.graduate.pojo.Code;
 import cxp.graduate.pojo.Device;
+import cxp.graduate.pojo.DidTime;
 import cxp.graduate.pojo.Directive;
+import cxp.graduate.pojo.Page;
 import cxp.graduate.pojo.Rows;
+import cxp.graduate.pojo.Sensor;
+import cxp.graduate.pojo.SensorData;
 import cxp.graduate.pojo.User;
 import cxp.graduate.service.DeviceService;
 import cxp.graduate.service.OrderService;
+import cxp.graduate.service.SensorService;
 import cxp.graduate.service.UserService;
 import cxp.graduate.utils.JsonUtils;
 import cxp.graduate.utils.UserResultUtils;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 /**
@@ -40,6 +46,8 @@ public class DeviceController {
 	private DeviceService deviceService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private SensorService sensorService;
 	
 	@Autowired
 	private OrderService orderService;
@@ -50,6 +58,12 @@ public class DeviceController {
 	@ResponseBody
 	public String device(@RequestBody Device d,HttpSession session) {
 		User user = (User) session.getAttribute("user");
+		if(user == null && user.isU_isact() && (user.getU_email() ==null)) {
+			result.setKey("success");
+			result.setMessage(result.LoginOut);
+			JSONObject json = JSONObject.fromObject(result);
+			return json.toString();
+		}
 		//查询是否存在该设备
 		String exitCode = deviceService.findDefaultCode(d.getD_code());
 		System.out.println(exitCode);
@@ -89,6 +103,12 @@ public class DeviceController {
 	@ResponseBody
 	public String devicemsg(HttpSession session) {
 		User user = (User) session.getAttribute("user");
+		if(user == null && user.isU_isact() && (user.getU_email() ==null)) {
+			result.setKey("success");
+			result.setMessage(result.LoginOut);
+			JSONObject json = JSONObject.fromObject(result);
+			return json.toString();
+		}
 		System.out.println(user.getU_id());
 		//假如从session域中查询到的user不为null再进行查询	
 		List<Device> list = new ArrayList<>();
@@ -101,7 +121,7 @@ public class DeviceController {
 		JsonUtils ju = new JsonUtils();
 		ju.setStatus(200);
 		ju.setMessage("hello");
-		ju.setTotal(1L);
+		ju.setTotal(1);
 		ju.setRows(rows);
 		JSONObject json = JSONObject.fromObject(ju);
 		return json.toString();
@@ -233,4 +253,23 @@ public class DeviceController {
 		return null;		
 	}
 	
+	
+	@RequestMapping(value="devices",method=RequestMethod.POST,produces="application/json;charset=utf-8")
+	@ResponseBody
+	public String devices(HttpServletRequest request,HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		if(user == null && user.isU_isact() && (user.getU_email() ==null)) {
+			result.setKey("success");
+			result.setMessage(result.LoginOut);
+			JSONObject json = JSONObject.fromObject(result);
+			return json.toString();
+		}
+		List<Device> devices = deviceService.findDeviceByUid(user.getU_id());
+		List<Object> deviceId = new ArrayList<>();
+		for (int i = 0; i < devices.size(); i++) {
+			deviceId.add(devices.get(i).getD_id());
+		}
+		JSONArray jsonArray = JSONArray.fromObject(deviceId);
+		return jsonArray.toString();
+	}
 }

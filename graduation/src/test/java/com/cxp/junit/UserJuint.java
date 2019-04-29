@@ -2,7 +2,9 @@ package com.cxp.junit;
 
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,10 +13,16 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import cxp.graduate.pojo.Device;
+import cxp.graduate.pojo.Page;
+import cxp.graduate.pojo.Rows;
+import cxp.graduate.pojo.Sensor;
 import cxp.graduate.pojo.User;
 import cxp.graduate.service.DeviceService;
+import cxp.graduate.service.SensorService;
 import cxp.graduate.service.UserService;
 import cxp.graduate.utils.CodeFactory;
+import cxp.graduate.utils.JsonUtils;
+import net.sf.json.JSONObject;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)//帮我们创建容器
@@ -25,6 +33,8 @@ public class UserJuint {
 	private UserService userService;
 	@Autowired
 	private DeviceService deviceService;
+	@Autowired
+	private SensorService sensorService;
 
 	/*用户注册功能*/
 	@Test
@@ -88,4 +98,5 @@ public class UserJuint {
 		User user = userService.findUserByName("陈小培");
 		System.out.println(user.getDevices());
 	}
+	
 }

@@ -34,7 +34,7 @@ public class SendThread implements Runnable{
 			while(true && (flag.getFlag())) {
 				PrintWriter pw = new PrintWriter(socket.getOutputStream(),true);
 				try {
-					Thread.sleep(8000);
+					Thread.sleep(4000);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

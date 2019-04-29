@@ -14,7 +14,7 @@ import cxp.graduate.pojo.Rows;
 public class JsonUtils {
     private int status;
     private String message;
-    private Long total; //总条数
+    private int total; //总条数
     private Rows rows;
 	public int getStatus() {
 		return status;
@@ -28,10 +28,10 @@ public class JsonUtils {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	public Long getTotal() {
+	public int getTotal() {
 		return total;
 	}
-	public void setTotal(Long total) {
+	public void setTotal(int total) {
 		this.total = total;
 	}
 	public Rows getRows() {

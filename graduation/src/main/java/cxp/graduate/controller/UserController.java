@@ -232,7 +232,6 @@ public class UserController {
 		return json.toString();
 	}
 	
-	//显示用户名
 	@RequestMapping(value="map",method=RequestMethod.POST,produces="application/json;charset=utf-8")
 	@ResponseBody
 	public String map(HttpSession session) {

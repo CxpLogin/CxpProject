@@ -16,6 +16,7 @@ public class Sensor implements Serializable{
 	private boolean flame;
 	private String setaddr;
 	private String gpsaddr;
+	private String indate;
 	private String intime;
 	private int did_sid;
 	public int getS_id() {
@@ -60,6 +61,12 @@ public class Sensor implements Serializable{
 	public void setGpsaddr(String gpsaddr) {
 		this.gpsaddr = gpsaddr;
 	}
+	public String getIndate() {
+		return indate;
+	}
+	public void setIndate(String indate) {
+		this.indate = indate;
+	}
 	public String getIntime() {
 		return intime;
 	}
@@ -75,7 +82,8 @@ public class Sensor implements Serializable{
 	@Override
 	public String toString() {
 		return "Sensor [s_id=" + s_id + ", yanwu=" + yanwu + ", wendu=" + wendu + ", shidu=" + shidu + ", flame="
-				+ flame + ", setaddr=" + setaddr + ", gpsaddr=" + gpsaddr + ", intime=" + intime + ", did_sid="
-				+ did_sid + "]";
+				+ flame + ", setaddr=" + setaddr + ", gpsaddr=" + gpsaddr + ", indate=" + indate + ", intime=" + intime
+				+ ", did_sid=" + did_sid + "]";
 	}
+	
 }

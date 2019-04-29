@@ -3,21 +3,14 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cxp.graduate.mapper.SensorMapper">  
-	<!-- 查询一个设备id下的传感器数据 -->
+
 	<select id="selectSensorCount" resultType="int" parameterType="int">
    		select count(*) from sensor where did_sid = #{did_sid};
    </select>
+   
 
-	<!-- 插入一条数据的同时删除第一条数据 -->
-   <!-- select * from sensor where did_sid = 1 order by intime;按时间升序 -->
-   <!-- select * from sensor s where did_sid = 1 order by intime desc limit 0,1;取时间排序后的第一个数据 -->
-   <!-- delete from sensor where intime = (select tmp.intime from (select * from sensor where did_sid = 1 order by intime limit 0,1) as tmp); -->
-   <delete id="deleteFirstTime" parameterType="int">  
-        delete from sensor where intime = (select tmp.intime from (select * from sensor where did_sid = #{did_sid} order by intime desc limit 0,1) as tmp)
-   </delete>
-   <!-- 插入数据 -->
-   <insert id="insertData" parameterType="Sensor">
-   		insert into sensor (yanwu,wendu,shidu,flame,gpsaddr,setaddr,intime,did_sid) values (#{yanwu},#{wendu},#{shidu},#{flame},#{gpsaddr},#{setaddr},#{intime},#{did_sid})
+   <insert id="insertSensorData" parameterType="Sensor">
+   		insert into sensor (yanwu,wendu,shidu,flame,gpsaddr,setaddr,intime,indate,did_sid) values (#{yanwu},#{wendu},#{shidu},#{flame},#{gpsaddr},#{setaddr},#{intime},#{indate},#{did_sid})
    </insert>
    
    <!-- 查询数据 -->
@@ -28,7 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
    	 	<result property="flame" column="flame"/>
     </resultMap>
    <select id="selectByDid" resultMap="sensorMap" parameterType="int">
-   		select * from sensor where did_sid = #{did_sid}
+   		select * from sensor where did_sid = #{did_sid} order by intime limit 0,10
    </select>
    
    <!-- 查询安装位置 -->
@@ -39,4 +32,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
    <select id="selectSensorSetAddr" resultMap="setAddrMap" parameterType="int">
    		select * from sensor where did_sid = #{did_sid}
    </select>
+   
+   <!-- 查询总条数 -->
+	 <select id="getTotalCount" resultType="int" parameterType="Page">
+		select count(*) from sensor where did_sid = #{did_sid} and indate = #{indate}
+	</select>
+	
+	<!-- 查询数据 -->
+   <resultMap type="Sensor" id="dateMap">
+  	 	<result property="intime" column="intime"/>
+   		<result property="wendu" column="wendu"/>
+   		<result property="shidu"  column="shidu"/>
+   	 	<result property="did_sid" column="did_sid"/>
+   	 	<result property="flame"  column="flame"/>
+   	 	<result property="gpsaddr" column="gpsaddr"/>
+   	 	<result property="setaddr"  column="setaddr"/>
+   	 	<result property="yanwu" column="yanwu"/>
+   </resultMap>
+   <select id="selectSensorMsg" resultMap="dateMap" parameterType="Page">
+		select * from sensor where indate = #{indate} and did_sid = #{did_sid} limit #{start},#{limit};
+	</select>
 </mapper>

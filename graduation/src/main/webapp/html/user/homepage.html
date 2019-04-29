@@ -24,10 +24,7 @@
 	                   			window.location.href='/graduation/html/user/user-login.html';//需要跳转的地址
                    			}	
 	                   	}	            	
-		            },
-		            error : function(result) {
-		            	alert("其他问题");
-		            }
+		            },		            
 		        });	
 			});
 		</script>
@@ -180,12 +177,8 @@
 					                },
 					            ]
 					        };
-				        Whole.setOption(option);
-				        
+				        Whole.setOption(option);			        
 		            },
-		            error : function(result) {
-		            	alert("其他问题");
-		            }
 		        });
 		  		return false;			
 			});
@@ -331,9 +324,6 @@
 		            contentType:"application/json;charset=utf-8",
 		            success: function (result) {		            	            	
 		            },
-		            error : function(result) {
-		            	alert("其他问题");
-		            }
 		        });	
 			}
 			if(relay == 1){
@@ -346,12 +336,9 @@
 		            contentType:"application/json;charset=utf-8",
 		            success: function (result) {		            	            	
 		            },
-		            error : function(result) {
-		            	alert("其他问题");
-		            }
+		           
 		        });
-			}
-			
+			}			
 		});  
 		
 		form.on('switch(alarm)', function(data){
@@ -366,10 +353,7 @@
 		            url: "/graduation/user/Palarm" +  msg,//url
 		            contentType:"application/json;charset=utf-8",
 		            success: function (result) {		            	            	
-		            },
-		            error : function(result) {
-		            	alert("其他问题");
-		            }
+		            },		           
 		        });
 			}
 			if(alarm == 1){
@@ -381,10 +365,7 @@
 		            url: "/graduation/user/Palarm" +  msg,//url
 		            contentType:"application/json;charset=utf-8",
 		            success: function (result) {		            	            	
-		            },
-		            error : function(result) {
-		            	alert("其他问题");
-		            }
+		            },		            
 		        });
 			}
 		});   		

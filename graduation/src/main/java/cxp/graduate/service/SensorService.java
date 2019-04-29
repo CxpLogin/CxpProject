@@ -2,6 +2,7 @@ package cxp.graduate.service;
 
 import java.util.List;
 
+import cxp.graduate.pojo.Page;
 import cxp.graduate.pojo.Sensor;
 
 /**
@@ -37,6 +38,24 @@ public interface SensorService {
 	* @return：返回json处理过的字符串
 	* @throws：
 	 */
-	public String selectSensorData(int did_sid);
+	public String selectSensorData(int uid);
+
+	/**
+	* @Title: getTotalCount
+	* @Description: 查询传感器数据
+	* @param：Page
+	* @return：int
+	* @throws：
+	 */
+	public int getTotalCount(Page page);
+
+	/**
+	* @Title: selectSensorMsg
+	* @Description: 
+	* @param：Page
+	* @return：int
+	* @throws：
+	 */
+	public List<Sensor> selectSensorMsg(Page page);
 	
 }

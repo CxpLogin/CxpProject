@@ -6,7 +6,7 @@
 	<!-- 配置上下文传递开启端口监听 --> 
 	<context-param>
 		<param-name>SocketPort</param-name>
-		<param-value>9999</param-value>
+		<param-value>8888</param-value>
 	</context-param>
  	<!-- 开启socket监听 -->
 	<listener>

@@ -1,5 +1,9 @@
 package cxp.graduate.service;
 
+import java.util.List;
+
+import cxp.graduate.pojo.Device;
+import cxp.graduate.pojo.Page;
 import cxp.graduate.pojo.User;
 
 public interface UserService {

@@ -22,6 +22,7 @@ import cxp.graduate.service.OrderService;
 import cxp.graduate.service.SensorService;
 import cxp.graduate.service.UserService;
 import cxp.graduate.utils.BaiduMapUtils;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @RunWith(SpringJUnit4ClassRunner.class)//帮我们创建容器
@@ -249,6 +250,20 @@ public class DeviceJuint {
 		}
 		System.out.println(d_id);
 		//System.out.println(sensorService.selectSensorData(1));
+	}
+	
+	/*获取用户下所有设备的id*/
+	@Test
+	public void demo7() throws MalformedURLException {
+		User user = new User();
+		user.setU_id(1);
+		List<Device> devices = deviceService.findDeviceByUid(user.getU_id());
+		List deviceId = new ArrayList<>();
+		for (int i = 0; i < devices.size(); i++) {
+			deviceId.add(devices.get(i).getD_id());
+		}
+		JSONArray jsonArray = JSONArray.fromObject(deviceId);
+		System.out.println(jsonArray.toString());		
 	}
 	
 }
